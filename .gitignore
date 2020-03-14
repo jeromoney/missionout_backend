@@ -1,3 +1,6 @@
 credentials.json
 *.xml
 *.iml
+bin/
+lib/
+venv/

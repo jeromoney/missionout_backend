@@ -1,4 +1,5 @@
 # Function dependencies, for example:
 # package>=version
-firebase-admin==3.0.0
-twilio==6.35.5
+firebase-admin==4.0.0
+twilio==6.36.0
+google-cloud==0.34.0

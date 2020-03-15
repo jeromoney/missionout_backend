@@ -1,33 +1,19 @@
 # Flow: User authenticates on app and triggers an authentication on the backend.
 # Outcome: Firestore adds document to users collection with appropriate fields
-#
-# bool isEditor;
-#   String teamID;
-#
-# voicePhoneNumber;
-#
-# mobilePhoneNumber;
-#
-# region;
-#
-# chatURI;
-#
-# displayName;
-# email;
-#
-# uid;
 
 import FirebaseSetup
 from firebase_admin import firestore
 
 
 def user_setup(event: dict):
-    print(event)
     db = firestore.client()
+    email = event.get('email', None)
+    domain = email.split('@')[1]
     user_info = {'isEditor': False,
                  'uid': event.get('uid', None),
                  'displayName': event.get('displayName'),
-                 'teamID': None}
+                 'teamID': domain,
+                 'email': email}
     db.collection('users').document().set(user_info)
 
 

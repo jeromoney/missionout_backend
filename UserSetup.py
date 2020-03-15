@@ -22,17 +22,24 @@ from firebase_admin import firestore
 
 
 def user_setup(event: dict):
+    print(event)
     db = firestore.client()
+    user_info = {'isEditor': False,
+                 'uid': event.get('uid', None),
+                 'displayName': event.get('displayName'),
+                 'teamID': None}
+    db.collection('users').document().set(user_info)
 
 
-def gcf_entry(event: dict,
-              context):  # context is type of google.cloud.functions.Context but not using variable at moment
+
+def gcf_entry(event: dict):
     FirebaseSetup.setup_firebase_gcf_environment()
     user_setup(event)
 
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
-    user_setup(None)
+    test_event = {'uid':'some uid', 'displayName': 'Joe Blow'}
+    user_setup(test_event)
     # setup firestore environment
     # add user

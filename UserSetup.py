@@ -9,12 +9,13 @@ def user_setup(event: dict):
     db = firestore.client()
     email = event.get('email', None)
     domain = email.split('@')[1]
+    uid = event['uid']
     user_info = {'isEditor': False,
-                 'uid': event.get('uid', None),
+                 'uid': uid,
                  'displayName': event.get('displayName'),
                  'teamID': domain,
                  'email': email}
-    db.collection('users').document().set(user_info)
+    db.collection('users').document(uid).set(user_info)
 
 
 

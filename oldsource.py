@@ -1,6 +1,7 @@
 import firebase_admin, json
 from firebase_admin import credentials, firestore, messaging
 from twilio.rest import Client
+from config import ACCOUNT_SID, AUTH_TOKEN
 import urllib.parse
 
 from enum import Enum
@@ -99,8 +100,8 @@ def sendFCMMessage(default_app, event=None):
 
 
 def sendText(event):
-    account_sid = 'ACb8fd56c0f7601247be381541b9401e99'
-    auth_token = '84962f8eabec27e1efb4260c5b62a4c5'
+    account_sid = ACCOUNT_SID
+    auth_token = AUTH_TOKEN
     client = Client(account_sid, auth_token)
     data = createMessage(event)
 
@@ -117,8 +118,8 @@ def sendText(event):
 def makePhoneCall(event):
     data = createMessage(event)
 
-    account_sid = 'ACb8fd56c0f7601247be381541b9401e99'
-    auth_token = '84962f8eabec27e1efb4260c5b62a4c5'
+    account_sid = ACCOUNT_SID
+    auth_token = AUTH_TOKEN
     needForAction = urllib.parse.quote(data['needForAction'])
     description = urllib.parse.quote(data['description'])
     url = F"https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={description}&needForAction={needForAction}"

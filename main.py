@@ -4,6 +4,7 @@ import UserSetup
 
 
 def send_page(event: dict, context):
+    print(context)
     print('hello world')
 
 

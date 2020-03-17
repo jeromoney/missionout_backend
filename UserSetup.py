@@ -18,7 +18,6 @@ def user_setup(event: dict):
     db.collection('users').document(uid).set(user_info)
 
 
-
 def gcf_entry(event: dict):
     FirebaseSetup.setup_firebase_gcf_environment()
     user_setup(event)
@@ -26,7 +25,7 @@ def gcf_entry(event: dict):
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
-    test_event = {'uid':'some uid', 'displayName': 'Joe Blow'}
+    test_event = {'uid': 'some uid', 'displayName': 'Joe Blow'}
     user_setup(test_event)
     # setup firestore environment
     # add user

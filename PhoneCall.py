@@ -34,7 +34,7 @@ def phone_call(event):
     call = client.calls.create(
         # URL is for static announcement
         url=CALL_SCRIPT_URL.format(description, needForAction),
-        to='+17199662421',
+        to='+17199662421', #TODO - NEED TO PULL PHONE NUMBERS FOR EVERY MEMBER
         from_='+14069241940'
     )
 

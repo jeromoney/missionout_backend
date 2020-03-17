@@ -1,3 +1,12 @@
+class Message:
+    def __init__(self, event):
+        page = event['value']['fields']
+        self.description = page['description']['stringValue']
+        self.needForAction = page['needForAction']['stringValue']
+        self.address = page['address']['stringValue']
+        self.creator = page['creator']['stringValue']
+
+
 class User:
     def __init__(self, snapshot_dict: dict):
         self.voicePhoneNumber = snapshot_dict.get('voicePhoneNumber', None)

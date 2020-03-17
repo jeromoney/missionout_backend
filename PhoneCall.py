@@ -1,35 +1,20 @@
 import FirebaseSetup
+from Data import Message
 import json
 from urllib import parse
 from twilio.rest import Client
 from config import ACCOUNT_SID, AUTH_TOKEN
 
-CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}" #brackers are holders for description and needForAction respectively
-
-
-def createMessage(event):
-    page = event['value']['fields']
-    description = page['description']['stringValue']
-    needForAction = page['needForAction']['stringValue']
-    address = page['address']['stringValue']
-    creator = page['creator']['stringValue']
-
-    data = {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        'description': description,
-        'needForAction': needForAction,
-        'address': address,
-        'creator': creator,
-    }
-    return data
+# brackets are holders for description and needForAction respectively
+CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 def phone_call(event):
-    data = createMessage(event)
+    message = Message(event)
 
     account_sid = ACCOUNT_SID
     auth_token = AUTH_TOKEN
-    needForAction = parse.quote(data['needForAction'])
-    description = parse.quote(data['description'])
+    needForAction = parse.quote(message.needForAction)
+    description = parse.quote(message.description)
     client = Client(account_sid, auth_token)
     call = client.calls.create(
         # URL is for static announcement

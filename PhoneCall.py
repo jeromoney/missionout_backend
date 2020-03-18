@@ -22,7 +22,7 @@ def phone_call(event):
         to='+17199662421', #TODO - NEED TO PULL PHONE NUMBERS FOR EVERY MEMBER
         from_='+14069241940'
     )
-
+    print("Result of call", call)
 
 def gcf_entry(event):
     FirebaseSetup.setup_firebase_gcf_environment()

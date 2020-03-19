@@ -8,7 +8,7 @@ def send_page(event: dict, context):
     print('hello world')
 
 
-def make_phone_call(event: dict, _): # underscore is the convection for a second parameter that I don't need
+def make_phone_call(event: dict, _): # underscore is the convention for a second parameter that I don't need
     PhoneCall.gcf_entry(event)
 
 

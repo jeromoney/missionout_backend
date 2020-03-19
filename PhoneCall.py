@@ -4,7 +4,6 @@ from Data import Message
 import json
 from urllib import parse
 from twilio.rest import Client
-from config import ACCOUNT_SID, AUTH_TOKEN
 
 # brackets are holders for description and needForAction respectively
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
@@ -37,4 +36,5 @@ if __name__ == '__main__':
                    'default)/documents/teams/chaffeecountysarnorth.org/missions/wLZ6aZy6pVRBJBCkZXeu/pages' \
                    '/icGulF5jyDuqBMnyuD2I\", \"updateTime\": \"2020-02-20T22:08:29.494223Z\"}}'
     test_event = json.loads(TEST_RESOURCE_STR)
+    from config import ACCOUNT_SID, AUTH_TOKEN # This will break if run from cloud
     phone_call(test_event, ACCOUNT_SID, AUTH_TOKEN)

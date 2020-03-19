@@ -3,9 +3,8 @@ import PhoneCall
 import UserSetup
 
 
-def send_page(event: dict, context):
-    print(context)
-    print('hello world')
+def send_page(event: dict, _):
+    make_phone_call(event, _)
 
 
 def make_phone_call(event: dict, _): # underscore is the convention for a second parameter that I don't need

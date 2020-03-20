@@ -9,7 +9,7 @@ from twilio.rest import Client
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 def phone_call(event, account_sid, auth_token):
-    team = Team('chaffeecountysarnorth.org')
+    team = Team('chaffeecountysarnorth.org') # TODO- this string is hardcoded and I still need to read the json file
     voicePhoneNumbers = team.get_voice_phone_numbers()
 
     message = Message(event)

@@ -1,3 +1,5 @@
+from firebase_admin import firestore
+
 class Message:
     def __init__(self, event):
         page = event['value']['fields']
@@ -16,8 +18,17 @@ class User:
 
 
 class Team:
-    def __init__(self):
+    def __init__(self, teamID):
+        self.teamID = teamID
         self.users = []
+        self.__init_users()
+
+    def __init_users(self):
+        db = firestore.client()
+        docs = db.collection("users").where("teamID", "==", self.teamID).get()
+        for doc in docs:
+            user = User(doc.to_dict())
+            self.add_user(user)
 
     def add_user(self, user):
         self.users.append(user)

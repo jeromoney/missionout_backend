@@ -1,6 +1,6 @@
 import FirebaseSetup
 from Secrets import twilio_secrets
-from Data import Message
+from Data import Message, Team
 import json
 from urllib import parse
 from twilio.rest import Client
@@ -9,17 +9,21 @@ from twilio.rest import Client
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 def phone_call(event, account_sid, auth_token):
+    team = Team('chaffeecountysarnorth.org')
+    voicePhoneNumbers = team.get_voice_phone_numbers()
+
     message = Message(event)
     needForAction = parse.quote(message.needForAction)
     description = parse.quote(message.description)
     client = Client(account_sid, auth_token)
-    call = client.calls.create(
-        # URL is for static announcement
-        url=CALL_SCRIPT_URL.format(description, needForAction),
-        to='+17199662421', #TODO - NEED TO PULL PHONE NUMBERS FOR EVERY MEMBER
-        from_='+14069241940'
-    )
-    print("Result of call", call)
+    for number in voicePhoneNumbers:
+        call = client.calls.create(
+            # URL is for static announcement
+            url=CALL_SCRIPT_URL.format(description, needForAction),
+            to=number,
+            from_='+14069241940'
+        )
+        print("Result of call", call)
 
 def gcf_entry(event):
     FirebaseSetup.setup_firebase_gcf_environment()

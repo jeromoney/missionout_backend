@@ -4,6 +4,7 @@ from Data import Message, Team
 import json
 from twilio.rest import Client
 from datetime import datetime
+Version = "3.0"
 
 #
 # Send Text Messages
@@ -12,23 +13,22 @@ from datetime import datetime
 
 def text_message(event, account_sid, auth_token):
     client = Client(account_sid, auth_token)
-    team = Team('chaffeecountysarnorth.org') # TODO- this string is hardcoded and I still need to read the json file
-    voicePhoneNumbers = team.get_voice_phone_numbers()
+    team = Team('chaffeecountysarnorth.org')  # TODO - this string is hardcoded and I still need to read the json file
     cellPhoneNumbers = team.get_mobile_phone_numbers()
     message = Message(event)
 
     # These need to be generated automatically
-    cell_number = '+15106290201'
     from_number = '+14069241940'
     text_image = "https://www.colorpsychology.org/wp-content/uploads/2017/03/rainbow-symbolism.jpg"
     body = F"Chaffee County SAR Mission. {message.description} {message.needForAction} {message.creator}"
-    text_call = client.messages.create(
-        body=body,
-        to=cell_number,
-        from_=from_number,
-        media_url=text_image,
-    )
-    print("Status of Text Call", text_call)
+
+    for cell_number in cellPhoneNumbers:
+        text_call = client.messages.create(
+            body=body,
+            to=cell_number,
+            from_=from_number,
+            media_url=text_image, )
+        print("Status of Text MESSAGE TO", cell_number, "is", text_call)
 
 
 def gcf_entry(event):
@@ -38,7 +38,6 @@ def gcf_entry(event):
 
 
 if __name__ == '__main__':
-    Version = "2.0"
     print("Running TextMessage Version", Version, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     FirebaseSetup.setup_firebase_local_environment()
     TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": \"2020-02-20T22:08:29.494223Z\", ' \

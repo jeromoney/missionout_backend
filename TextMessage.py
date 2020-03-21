@@ -4,7 +4,7 @@ from Data import Message, Team
 import json
 from twilio.rest import Client
 from datetime import datetime
-Version = "3.0"
+Version = "3.1"
 
 #
 # Send Text Messages
@@ -12,8 +12,19 @@ Version = "3.0"
 
 
 def text_message(event, account_sid, auth_token):
+    # get teamID by digging in event dictionary
+    teamIDPath = event['value']['name'].split('/')
+    teamID = None
+    for i, word in enumerate(teamIDPath):
+        if word == 'teams':
+            teamID = teamIDPath[i + 1]
+            break
+    else:
+        raise ValueError('teamID not found in path')
+
+    team = Team(teamID)
+
     client = Client(account_sid, auth_token)
-    team = Team('chaffeecountysarnorth.org')  # TODO - this string is hardcoded and I still need to read the json file
     cellPhoneNumbers = team.get_mobile_phone_numbers()
     message = Message(event)
 

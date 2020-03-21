@@ -9,7 +9,17 @@ from twilio.rest import Client
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 def phone_call(event, account_sid, auth_token):
-    team = Team('chaffeecountysarnorth.org') # TODO- this string is hardcoded and I still need to read the json file
+    #get teamID by digging in event dictionary
+    teamIDPath = event['value']['name'].split('/')
+    teamID = None
+    for i, word in enumerate(teamIDPath):
+        if word == 'teams':
+            teamID = teamIDPath[i + 1]
+            break
+    else:
+        raise ValueError('teamID not found in path')
+
+    team = Team(teamID) # TODO- this string is hardcoded and I still need to read the json file
     voicePhoneNumbers = team.get_voice_phone_numbers()
 
     message = Message(event)

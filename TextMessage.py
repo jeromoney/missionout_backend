@@ -30,7 +30,7 @@ def text_message(event, account_sid, auth_token):
 
     # These need to be generated automatically
     from_number = '+14069241940'
-    body = F"Chaffee County SAR Mission. {message.description} {message.needForAction} {message.creator}"
+    body = F"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"
 
     for cell_number in cellPhoneNumbers:
         text_call = client.messages.create(

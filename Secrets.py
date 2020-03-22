@@ -8,7 +8,6 @@ AUTH_TOKEN_KEY = 'twilio_AUTH_TOKEN'
 
 def twilio_secrets():
     client = secretmanager.SecretManagerServiceClient()
-    client.get_iam_policy()
     name = client.secret_version_path(PROJECT_ID, ACCOUNT_SID_KEY, VERSION_ID)
     response = client.access_secret_version(name)
     account_sid = response.payload.data.decode('UTF-8')

@@ -36,6 +36,7 @@ def text_message(event, account_sid, auth_token):
         text_call = client.messages.create(
             body=body,
             to=cell_number,
+
             from_=from_number, )
         print("Status of Text Message sent to", cell_number, "is", text_call)
 

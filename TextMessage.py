@@ -30,14 +30,12 @@ def text_message(event, account_sid, auth_token):
 
     # These need to be generated automatically
     from_number = '+14069241940'
-    text_image = "https://www.colorpsychology.org/wp-content/uploads/2017/03/rainbow-symbolism.jpg"
     body = F"Chaffee County SAR Mission. {message.description} {message.needForAction} {message.creator}"
 
     for cell_number in cellPhoneNumbers:
         text_call = client.messages.create(
             body=body,
             to=cell_number,
-            media_url=text_image,
             from_=from_number, )
         print("Status of Text Message sent to", cell_number, "is", text_call)
 

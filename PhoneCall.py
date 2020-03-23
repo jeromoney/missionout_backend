@@ -5,12 +5,10 @@ from twilio.rest import Client
 
 import FirebaseSetup
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from Twilio_Config import PURCHASED_PHONE_NUMBER
+from Twilio_Config import PURCHASED_PHONE_NUMBER, CALL_SCRIPT_URL
 from Data import Message, Team
 from Secrets import twilio_secrets
 
-# brackets are holders for description and needForAction respectively
-CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 
 def make_phone_call(event: dict, team: Team, cloud_environment=True):

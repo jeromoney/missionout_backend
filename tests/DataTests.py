@@ -20,7 +20,7 @@ class MyTestCase(unittest.TestCase):
 
         user1 = User(snapshot_dict1)
         user2 = User(snapshot_dict2)
-        team = Team()
+        team = Team('chaffeecountysarnorth.org')
         team.add_user(user1)
         team.add_user(user2)
         self.assert_(user1 in team.users)

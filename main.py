@@ -6,6 +6,8 @@ import UserSetup
 def send_page(event: dict, _):
     make_phone_call(event, _)
     make_text_message(event, _)
+    #send_firebase_cloud_notification(event,_)
+    #send_email(event,_)
 
 
 def make_text_message(event: dict, _): # underscore is the convention for a second parameter that I don't need

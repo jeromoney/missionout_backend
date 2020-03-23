@@ -1,3 +1,4 @@
+google
 # Function dependencies, for example:
 # package>=version
 firebase-admin==4.0.0

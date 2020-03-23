@@ -4,7 +4,7 @@ from urllib import parse
 from twilio.rest import Client
 
 import FirebaseSetup
-import Utils
+from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from Twilio_Config import PURCHASED_PHONE_NUMBER
 from Data import Message, Team
 from Secrets import twilio_secrets
@@ -13,7 +13,13 @@ from Secrets import twilio_secrets
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 
-def phone_call(event, account_sid, auth_token, team):
+def phone_call(event: dict, team: Team, cloud_environment=True):
+    if cloud_environment:
+        account_sid, auth_token = twilio_secrets()
+    else:
+        from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
+        account_sid, auth_token = ACCOUNT_SID, AUTH_TOKEN
+
     voice_phone_numbers = team.get_voice_phone_numbers()
 
     message = Message(event)
@@ -37,16 +43,7 @@ def gcf_entry(event, team):
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
-    TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": \"2020-02-20T22:08:29.494223Z\", ' \
-                        '\"fields\": {\"needForAction\": {\"stringValue\": \"we need kisses for the puppy\"}, \"address\": {' \
-                        '\"stringValue\": \"wLZ6aZy6pVRBJBCkZXeu\"}, \"creator\": {\"stringValue\": \"Justin Matis\"}, ' \
-                        '\"description\": {\"stringValue\": \"A puppy got hurt\"}, \"time\": {\"timestampValue\": ' \
-                        '\"2020-02-20T22:08:29.415Z\"}}, \"name\": \"projects/missionout/databases/(' \
-                        'default)/documents/teams/chaffeecountysarnorth.org/missions/wLZ6aZy6pVRBJBCkZXeu/pages' \
-                        '/icGulF5jyDuqBMnyuD2I\", \"updateTime\": \"2020-02-20T22:08:29.494223Z\"}}'
     test_event = json.loads(TEST_RESOURCE_STR)
-    from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
-
-    teamID = Utils.get_teamID_from_event(test_event)
+    teamID = get_teamID_from_event(test_event)
     team = Team(teamID)
-    phone_call(test_event, ACCOUNT_SID, AUTH_TOKEN, team)
+    phone_call(test_event, team)

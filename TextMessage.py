@@ -9,10 +9,11 @@ import json
 from twilio.rest import Client
 import Utils
 from datetime import datetime
-TEXT_VERSION = "3.2"
+TEXT_VERSION = "3.3"
 
 
 def text_message(event: object, account_sid: object, auth_token: object, team: object) -> object:
+    print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = Message(event)
@@ -30,8 +31,6 @@ def text_message(event: object, account_sid: object, auth_token: object, team: o
 
 
 def gcf_entry(event, team):   # For Google Cloud Function
-    print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    FirebaseSetup.setup_firebase_gcf_environment()
     account_sid, auth_token = twilio_secrets()
     text_message(event, account_sid, auth_token, team)
 
@@ -39,7 +38,6 @@ def gcf_entry(event, team):   # For Google Cloud Function
 if __name__ == '__main__':  # For testing
     from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
 
-    print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     FirebaseSetup.setup_firebase_local_environment()
     TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": \"2020-02-20T22:08:29.494223Z\", ' \
                         '\"fields\": {\"needForAction\": {\"stringValue\": \"we need kisses for the puppy\"}, \"address\": {' \

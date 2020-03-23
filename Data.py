@@ -1,5 +1,6 @@
 from firebase_admin import firestore
 
+
 class Message:
     def __init__(self, event):
         page = event['value']['fields']
@@ -7,6 +8,15 @@ class Message:
         self.needForAction = page['needForAction']['stringValue']
         self.address = page['address']['stringValue']
         self.creator = page['creator']['stringValue']
+
+    def get_email(self):
+        return {
+            'to': 'justin.matis@gmail.com',
+            'message': {
+                'subject': self.description,
+                'text': F"{self.description} {self.needForAction} {self.creator}"
+            }
+        }
 
 
 class User:

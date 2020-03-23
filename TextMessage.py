@@ -12,7 +12,7 @@ from datetime import datetime
 TEXT_VERSION = "3.3"
 
 
-def text_message(event: object, account_sid: object, auth_token: object, team: object) -> object:
+def text_message(event: dict, account_sid: str, auth_token: str, team: Team):
     print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()

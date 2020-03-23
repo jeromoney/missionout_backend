@@ -1,5 +1,6 @@
 import FirebaseSetup
-from Data import Message
+import Utils
+from Data import Message, Team
 from firebase_admin import messaging
 import json
 
@@ -14,27 +15,6 @@ def createMessage(event):
     }
     return data
 
-def send_fcm_notification(event):
-    # registration_tokens = getRegistrationTokens()
-    # message = messaging.MulticastMessage(
-    #     data=createMessage(event),
-    #     tokens=registration_tokens
-    # )
-    #
-    # response = messaging.send_multicast(message, app=default_app)
-    topic = 'chaffeecountysarnorth.org'
-
-    message = messaging.Message(
-        data=createMessage(event),
-        topic=topic,
-    )
-    response = messaging.send(message)
-
-    return response
-
-def gcf_entry(event):
-    FirebaseSetup.setup_firebase_gcf_environment()
-    send_fcm_notification(event)
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
@@ -47,4 +27,5 @@ if __name__ == '__main__':
                         '/icGulF5jyDuqBMnyuD2I\", \"updateTime\": \"2020-02-20T22:08:29.494223Z\"}}'
 
     test_event = json.loads(TEST_RESOURCE_STR)
-    send_fcm_notification(test_event)
+    teamID = Utils.get_teamID_from_event(test_event)
+    team = Team(teamID)

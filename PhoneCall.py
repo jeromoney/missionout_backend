@@ -19,7 +19,7 @@ def phone_call(event, account_sid, auth_token):
     else:
         raise ValueError('teamID not found in path')
 
-    team = Team(teamID) # TODO- this string is hardcoded and I still need to read the json file
+    team = Team(teamID)
     voicePhoneNumbers = team.get_voice_phone_numbers()
 
     message = Message(event)

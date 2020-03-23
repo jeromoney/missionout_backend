@@ -1,16 +1,11 @@
 # Entry way for google cloud functions.
-import FCMNotification
 import FirebaseSetup
-import PhoneCall, TextMessage
 import UserSetup
 import Utils
 from Data import Team
 from TextMessage import send_text_message
 from FCMNotification import send_fcm_notification
-
-
-def make_phone_call(event: dict, team: Team):  # underscore is the convention for a second parameter that I don't need
-    PhoneCall.gcf_entry(event, team)
+from PhoneCall import make_phone_call
 
 def send_page(event: dict, _):
     """Function is the entry way for the google cloud function environment"""

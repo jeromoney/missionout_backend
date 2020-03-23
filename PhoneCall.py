@@ -13,7 +13,7 @@ from Secrets import twilio_secrets
 CALL_SCRIPT_URL = "https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}"
 
 
-def phone_call(event: dict, team: Team, cloud_environment=True):
+def make_phone_call(event: dict, team: Team, cloud_environment=True):
     if cloud_environment:
         account_sid, auth_token = twilio_secrets()
     else:
@@ -36,14 +36,9 @@ def phone_call(event: dict, team: Team, cloud_environment=True):
         print("Result of call", call)
 
 
-def gcf_entry(event, team):
-    account_sid, auth_token = twilio_secrets()
-    phone_call(event, account_sid, auth_token, team)
-
-
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     team = Team(teamID)
-    phone_call(test_event, team)
+    make_phone_call(test_event, team)

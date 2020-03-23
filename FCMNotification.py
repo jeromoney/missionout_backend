@@ -1,7 +1,8 @@
+from firebase_admin import messaging
+
 import FirebaseSetup
 import Utils
 from Data import Message, Team
-from firebase_admin import messaging
 import json
 
 def createMessage(event):
@@ -14,7 +15,22 @@ def createMessage(event):
         'creator': message.creator,
     }
     return data
+def send_fcm_notification(event: dict, team: Team):
+    # registration_tokens = getRegistrationTokens()
+    # message = messaging.MulticastMessage(
+    #     data=createMessage(event),
+    #     tokens=registration_tokens
+    # )
+    #
+    # response = messaging.send_multicast(message, app=default_app)
 
+    message = messaging.Message(
+        data=createMessage(event),
+        topic=team.teamID,
+    )
+    response = messaging.send(message)
+
+    return response
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
@@ -29,3 +45,4 @@ if __name__ == '__main__':
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = Utils.get_teamID_from_event(test_event)
     team = Team(teamID)
+    send_fcm_notification(test_event, team)

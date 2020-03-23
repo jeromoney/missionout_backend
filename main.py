@@ -5,14 +5,8 @@ import PhoneCall, TextMessage
 import UserSetup
 import Utils
 from Data import Team
-
-
-def send_firebase_cloud_notification(event: dict, team: Team):
-    FCMNotification.send_fcm_notification(event, team)
-
-
-def make_text_message(event: dict, team: Team):  # underscore is the convention for a second parameter that I don't need
-    TextMessage.gcf_entry(event, team)
+from TextMessage import send_text_message
+from FCMNotification import send_fcm_notification
 
 
 def make_phone_call(event: dict, team: Team):  # underscore is the convention for a second parameter that I don't need
@@ -26,8 +20,8 @@ def send_page(event: dict, _):
     team = Team(teamID)
 
     make_phone_call(event, team)
-    make_text_message(event, team)
-    send_firebase_cloud_notification(event, team)
+    send_text_message(event, team)
+    send_fcm_notification(event, team)
     # send_email(event,_)
 
 

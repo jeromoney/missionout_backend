@@ -9,11 +9,18 @@ import json
 from twilio.rest import Client
 import Utils
 from datetime import datetime
+
 TEXT_VERSION = "3.3"
 
 
-def text_message(event: dict, account_sid: str, auth_token: str, team: Team):
+def send_text_message(event: dict, team: Team, cloud_environment=True):
     print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    if cloud_environment:
+        account_sid, auth_token = twilio_secrets()
+    else:
+        from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
+        account_sid, auth_token = ACCOUNT_SID, AUTH_TOKEN
+
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = Message(event)
@@ -26,17 +33,11 @@ def text_message(event: dict, account_sid: str, auth_token: str, team: Team):
             body=body,
             to=number,
             from_=PURCHASED_PHONE_NUMBER
-            )
+        )
         print("Status of Text Message sent to", number, "is", text_call)
 
 
-def gcf_entry(event, team):   # For Google Cloud Function
-    account_sid, auth_token = twilio_secrets()
-    text_message(event, account_sid, auth_token, team)
-
-
 if __name__ == '__main__':  # For testing
-    from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
 
     FirebaseSetup.setup_firebase_local_environment()
     TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": \"2020-02-20T22:08:29.494223Z\", ' \
@@ -50,5 +51,5 @@ if __name__ == '__main__':  # For testing
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = Utils.get_teamID_from_event(test_event)
     team = Team(teamID)
-    text_message(test_event, ACCOUNT_SID, AUTH_TOKEN, team)
+    send_text_message(test_event, team, cloud_environment=False)
     print("All done with TextMessage -", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))

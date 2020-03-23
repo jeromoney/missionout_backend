@@ -16,6 +16,8 @@ def createMessage(event):
     }
     return data
 def send_fcm_notification(event: dict, team: Team):
+    # Currently the code uses topics instead of tokens to push notification. Not sure if that is secure and as reliable
+    # The code below is for tokens
     # registration_tokens = getRegistrationTokens()
     # message = messaging.MulticastMessage(
     #     data=createMessage(event),

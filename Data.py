@@ -8,10 +8,15 @@ class Message:
         self.needForAction = page['needForAction']['stringValue']
         self.address = page['address']['stringValue']
         self.creator = page['creator']['stringValue']
+        self.uids = []
+
+    def set_uids(self, uids: list):
+        self.uids = uids
 
     def get_email(self):
+        assert self.uids != []
         return {
-            'toUids': ['7Dy55tNWLlREHPnOPlfLjbIGc652'],
+            'toUids': self.uids,
             'message': {
                 'subject': self.description,
                 'text': F"{self.description} {self.needForAction} {self.creator}",
@@ -48,3 +53,6 @@ class Team:
 
     def get_mobile_phone_numbers(self):
         return [user.mobilePhoneNumber for user in self.users]
+
+    def get_uids(self):
+        return [user.uid for user in self.users]

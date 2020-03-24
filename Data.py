@@ -49,10 +49,10 @@ class Team:
         self.users.append(user)
 
     def get_voice_phone_numbers(self):
-        return [user.voicePhoneNumber for user in self.users]
+        return [user.voicePhoneNumber for user in self.users if user.voicePhoneNumber is not None]
 
     def get_mobile_phone_numbers(self):
-        return [user.mobilePhoneNumber for user in self.users]
+        return [user.mobilePhoneNumber for user in self.users if user.mobilePhoneNumber is not None]
 
     def get_uids(self):
-        return [user.uid for user in self.users]
+        return [user.uid for user in self.users if user.uid is not None]

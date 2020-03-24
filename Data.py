@@ -11,10 +11,10 @@ class Message:
 
     def get_email(self):
         return {
-            'to': 'justin.matis@gmail.com',
+            'toUids': ['7Dy55tNWLlREHPnOPlfLjbIGc652'],
             'message': {
                 'subject': self.description,
-                'text': F"{self.description} {self.needForAction} {self.creator}"
+                'text': F"{self.description} {self.needForAction} {self.creator}",
             }
         }
 

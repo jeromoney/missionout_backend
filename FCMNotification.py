@@ -13,6 +13,7 @@ def createMessage(event):
         'needForAction': message.needForAction,
         'address': message.address,
         'creator': message.creator,
+        'android_channel_id': 'channelId',
     }
     return data
 def send_fcm_notification(event: dict, team: Team):

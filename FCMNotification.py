@@ -8,12 +8,11 @@ import json
 def createMessage(event):
     message = Message(event)
     data = {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'description': message.description,
         'needForAction': message.needForAction,
         'address': message.address,
         'creator': message.creator,
-        'android_channel_id': 'channelId',
     }
     return data
 def send_fcm_notification(event: dict, team: Team):

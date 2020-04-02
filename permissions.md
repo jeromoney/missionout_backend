@@ -1,3 +1,8 @@
+A table illustrating the permissions for user roles and documents. The permissions can be read left to right with additional permissions stacked on. e.g. An editor has all the permissions of a user and more.
+
+Documents are associated with either a user or a team. No user can access a document of another team or user in that team. 
+
+
 --- | Location                                              | Anonymous      | User        | Editor
 ---          | ---                                                   | ---          | ---                                  | ---
 User    | /users/{user}                                         | no access |get,update own self | read,update own team 

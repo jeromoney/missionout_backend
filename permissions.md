@@ -1,4 +1,4 @@
---- | Location                                              | Users      | Editors        | Signed in (but of different team) | Anonymous
+--- | Location                                              | Users      | Editors        | Different Team | Anonymous
 ---          | ---                                                   | ---          | ---          | ---                               | ---
 User    | /users/{user}                                         | Content Cell | Content Cell | no access                      | no access
 Token        | /users/{user}/tokens/{token}                          | null         | null         | no access                              | no access

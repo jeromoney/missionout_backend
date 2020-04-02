@@ -1,6 +1,6 @@
---- | Location                                              | Editors      | Users        | Signed in (but of different team) | Anonymous
+--- | Location                                              | Users      | Editors        | Signed in (but of different team) | Anonymous
 ---          | ---                                                   | ---          | ---          | ---                               | ---
-User    | /users/{user}                                         | Content Cell | Content Cell | Content Cell                      | Content Cell
+User    | /users/{user}                                         | Content Cell | Content Cell | no access                      | no access
 Token        | /users/{user}/tokens/{token}                          | null         | null         | no access                              | no access
 Team    | /teams/{team}                                         | null         | null         | no access                              | no access
 Mission | /teams/{team}/missions/{mission}                      | null         | null         | no access                              | no access

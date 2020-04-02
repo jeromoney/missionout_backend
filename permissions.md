@@ -5,4 +5,4 @@ Token        | /users/{user}/tokens/{token}                          | no access
 Team    | /teams/{team}    | no access                                     | get own team         | update own team                                  
 Mission | /teams/{team}/missions/{mission}        | no access              | read own team         | write own team                               
 Responses    | /teams/{team}/missions/{mission}/responses/{response}| no access | read own team, write own response         | --                                  
-Pages        | /teams/{team}/missions/{mission}/pages/{page}         | no access         | create own team                                      | --
+Pages        | /teams/{team}/missions/{mission}/pages/{page}         | no access         | --                                      | create own team

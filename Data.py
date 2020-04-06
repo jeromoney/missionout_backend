@@ -45,6 +45,10 @@ class Team:
             user = User(doc.to_dict())
             self.add_user(user)
 
+    def get_tokens(self):
+        ''':return active tokens for all members in team'''
+        pass
+
     def add_user(self, user):
         self.users.append(user)
 

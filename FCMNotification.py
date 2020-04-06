@@ -25,13 +25,21 @@ def send_fcm_notification(event: dict, team: Team):
     #     tokens=registration_tokens
     # )
     #
-    # response = messaging.send_multicast(message, app=default_app)
-
-    message = messaging.Message(
+    #
+    tokens = team.get_tokens()
+    message = messaging.MulticastMessage(
         data=createMessage(event),
-        topic=team.teamID,
+        tokens=tokens
     )
-    response = messaging.send(message)
+    response = messaging.send_multicast(message)
+    print(F"Sent {len(tokens)} FCM messages")
+    if response.failure_count > 0:
+        print('Sending broadcast message since some messages did not go through')
+        message = messaging.Message(
+            data=createMessage(event),
+            topic=team.teamID,
+        )
+        response = messaging.send(message)
 
     return response
 

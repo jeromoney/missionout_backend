@@ -1,4 +1,5 @@
 from firebase_admin import firestore
+from itertools import chain
 
 
 class Message:
@@ -29,7 +30,7 @@ class User:
         self.voicePhoneNumber = snapshot_dict.get('voicePhoneNumber', None)
         self.mobilePhoneNumber = snapshot_dict.get('mobilePhoneNumber', None)
         self.uid = snapshot_dict.get('uid', None)
-        self.token = snapshot_dict.get('token', None)
+        self.tokens = snapshot_dict.get('tokens', None)
 
 
 class Team:
@@ -46,8 +47,9 @@ class Team:
             self.add_user(user)
 
     def get_tokens(self):
-        ''':return active tokens for all members in team'''
-        pass
+        """:return active Firebase Authentication tokens for all members in team"""
+        # need to collapse all token lists to a single list
+        return list(chain.from_iterable([user.tokens for user in self.users if user.tokens is not None]))
 
     def add_user(self, user):
         self.users.append(user)

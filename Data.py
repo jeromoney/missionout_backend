@@ -37,11 +37,11 @@ class Team:
     def __init__(self, teamID):
         self.teamID = teamID
         self.users = []
+        self.db = firestore.client()
         self.__init_users()
 
     def __init_users(self):
-        db = firestore.client()
-        docs = db.collection("users").where("teamID", "==", self.teamID).get()
+        docs = self.db.collection("users").where("teamID", "==", self.teamID).get()
         for doc in docs:
             user = User(doc.to_dict())
             self.add_user(user)
@@ -62,3 +62,12 @@ class Team:
 
     def get_uids(self):
         return [user.uid for user in self.users if user.uid is not None]
+
+    def delete_tokens(self, erroneous_tokens):
+        # This algo is a bit slow and could be sped up
+        for token in erroneous_tokens:
+            for user in self.users:
+                if user.tokens is not None and token in user.tokens:
+                    # delete token
+                    doc = self.db.collection("users").document(user.uid)
+                    doc.update({'tokens': firestore.ArrayRemove([token])})

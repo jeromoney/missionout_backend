@@ -1,6 +1,7 @@
 #
 # Send Text Messages
 #
+import time
 import FirebaseSetup
 from Secrets import twilio_secrets
 from Twilio_Config import PURCHASED_PHONE_NUMBER
@@ -10,11 +11,14 @@ from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from datetime import datetime
 
+DELAY = 30 # Seconds. Gives the FCM notifications a 30 second hard start before being sent. The text message notification
+           # sound can overrun the louder FCM notification.
 TEXT_VERSION = "3.3"
 
 
 def send_text_message(event: dict, team: Team, cloud_environment=True):
     print("Running TextMessage Version", TEXT_VERSION, " - ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    time.sleep(DELAY)
     if cloud_environment:
         account_sid, auth_token = twilio_secrets()
     else:

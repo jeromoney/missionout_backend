@@ -1,8 +1,9 @@
 # Entry way for google cloud functions.
+from concurrent.futures.thread import ThreadPoolExecutor
+
 import FirebaseSetup
 import UserSetup
 import Utils
-import warnings
 
 from Data import Team
 from TextMessage import send_text_message
@@ -17,11 +18,12 @@ def send_page(event: dict, _):
     teamID = Utils.get_teamID_from_event(event)
     team = Team(teamID)
     page_functions = [make_phone_call, send_text_message, send_fcm_notification, send_email]
+    pool = ThreadPoolExecutor()
+    futures = []
     for function in page_functions:
-        try:
-            function(event, team)
-        except:
-            print(f"Error running ${function}. Continuing execution")
+        futures.append(pool.submit(function, *(event, team)))
+    pool.shutdown(wait=True)
+    print(f"Outcome: ${futures}")
 
 
 def user_setup(event: dict, _):

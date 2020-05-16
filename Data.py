@@ -27,8 +27,17 @@ class MyMessage:
 
 class User:
     def __init__(self, snapshot_dict: dict):
-        self.voicePhoneNumber = snapshot_dict.get('voicePhoneNumber', None)
-        self.mobilePhoneNumber = snapshot_dict.get('mobilePhoneNumber', None)
+        try:
+            self.voicePhoneNumber = snapshot_dict['voicePhoneNumber']['phoneNumber']
+        except KeyError:
+            print("Phone number doesn't exist or in old format")
+            self.voicePhoneNumber = None
+
+        try:
+            self.mobilePhoneNumber = snapshot_dict['mobilePhoneNumber']['phoneNumber']
+        except KeyError:
+            print("Phone number doesn't exist or in old format")
+            self.mobilePhoneNumber = None
         self.uid = snapshot_dict.get('uid', None)
         self.tokens = snapshot_dict.get('tokens', None)
 

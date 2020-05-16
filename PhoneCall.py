@@ -10,7 +10,6 @@ from Data import MyMessage, Team
 from Secrets import twilio_secrets
 
 
-
 def make_phone_call(event: dict, team: Team, cloud_environment=True):
     if cloud_environment:
         account_sid, auth_token = twilio_secrets()
@@ -39,4 +38,4 @@ if __name__ == '__main__':
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     team = Team(teamID)
-    make_phone_call(test_event, team)
+    make_phone_call(test_event, team, cloud_environment=False)

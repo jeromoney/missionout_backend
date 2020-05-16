@@ -29,7 +29,7 @@ def send_text_message(event: dict, team: Team, cloud_environment=True):
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = MyMessage(event)
 
-    # These need to be generated automatically
+    # These need to be changed automatically
     body = F"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"
 
     for number in mobile_phone_numbers:

@@ -10,7 +10,7 @@ class MyMessage:
         self.address = page['address']['stringValue']
         self.creator = page['creator']['stringValue']
         self.onlyEditors = page['onlyEditors']['booleanValue']
-        assert(self.onlyEditors is bool)
+        assert(type(self.onlyEditors) is bool)
         self.uids = []
 
     def set_uids(self, uids: list):

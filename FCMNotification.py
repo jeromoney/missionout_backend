@@ -27,8 +27,11 @@ def send_fcm_notification(event: dict, team: Team):
     message = messaging.MulticastMessage(
         apns=messaging.APNSConfig(payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a",badge=1))),
         android=messaging.AndroidConfig(
-            notification=messaging.AndroidNotification(priority="high",
-                                                       click_action="FLUTTER_NOTIFICATION_CLICK",channel_id="mission_pages"), ),
+            notification=messaging.AndroidNotification(
+                priority="high",
+                click_action="FLUTTER_NOTIFICATION_CLICK",
+                channel_id="mission_pages",
+            sound="school_fire_alarm"), ),
         notification=messaging.Notification(title=data["description"], body=data["needForAction"],
                                             )
         ,

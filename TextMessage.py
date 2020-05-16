@@ -5,7 +5,7 @@ import time
 import FirebaseSetup
 from Secrets import twilio_secrets
 from Twilio_Config import PURCHASED_PHONE_NUMBER
-from Data import Message, Team
+from Data import MyMessage, Team
 import json
 from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
@@ -27,7 +27,7 @@ def send_text_message(event: dict, team: Team, cloud_environment=True):
 
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
-    message = Message(event)
+    message = MyMessage(event)
 
     # These need to be generated automatically
     body = F"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"

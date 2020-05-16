@@ -3,12 +3,12 @@ from firebase_admin._messaging_utils import UnregisteredError
 
 import FirebaseSetup
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from Data import Message, Team
+from Data import MyMessage, Team
 import json
 
 
 def createMessage(event):
-    message = Message(event)
+    message = MyMessage(event)
     data = {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'description': message.description,
@@ -21,24 +21,26 @@ def createMessage(event):
 
 
 def send_fcm_notification(event: dict, team: Team):
-    #apologies for the hack below. I need to pair both tokens and the uids
+    # apologies for the hack below. I need to pair both tokens and the uids
+    data = createMessage(event)
     tokens = team.get_tokens()
     message = messaging.MulticastMessage(
-        data=createMessage(event),
+        apns=messaging.APNSConfig(payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a",badge=1))),
+        android=messaging.AndroidConfig(
+            notification=messaging.AndroidNotification(priority="high",
+                                                       click_action="FLUTTER_NOTIFICATION_CLICK",channel_id="mission_pages"), ),
+        notification=messaging.Notification(title=data["description"], body=data["needForAction"],
+                                            )
+        ,
         tokens=tokens
     )
     responses = messaging.send_multicast(message)
     print(F"Sent {len(tokens)} FCM messages")
-    if responses.failure_count > 0 or True:
+    if responses.failure_count > 0:
         print('Sending broadcast message since some messages did not go through')
-        # message = messaging.Message(
-        #     data=createMessage(event),
-        #     topic=team.teamID,
-        # )
-        # message.data['description'] = 'Broadcast: ' + message.data['description']
-        # response = messaging.send(message)
-        #clean up expired tokens.
-        erroneous_tokens = [tokens[i] for i, response in enumerate(responses.responses) if isinstance(response.exception, UnregisteredError)]
+        # clean up expired tokens.
+        erroneous_tokens = [tokens[i] for i, response in enumerate(responses.responses) if
+                            isinstance(response.exception, UnregisteredError)]
         team.delete_tokens(erroneous_tokens)
     return responses
 

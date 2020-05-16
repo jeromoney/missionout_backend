@@ -2,7 +2,7 @@ from firebase_admin import firestore
 from itertools import chain
 
 
-class Message:
+class MyMessage:
     def __init__(self, event):
         page = event['value']['fields']
         self.description = page['description']['stringValue']
@@ -70,4 +70,4 @@ class Team:
                 if user.tokens is not None and token in user.tokens:
                     # delete token
                     doc = self.db.collection("users").document(user.uid)
-                    doc.update({'tokens': firestore.ArrayRemove([token])})
+                    doc.update({'tokens': firestore.firestore.ArrayRemove([token])})

@@ -43,6 +43,6 @@ if __name__ == '__main__':  # For testing
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
-    team = Team(teamID)
+    team = Team(teamID, message.onlyEditors)
     send_text_message(test_event, team, cloud_environment=False)
     print("All done with TextMessage -", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))

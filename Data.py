@@ -10,7 +10,7 @@ class MyMessage:
         self.address = page['address']['stringValue']
         self.creator = page['creator']['stringValue']
         self.onlyEditors = page['onlyEditors']['booleanValue']
-        assert(type(self.onlyEditors) is bool)
+        assert (type(self.onlyEditors) is bool)
         self.uids = []
 
     def set_uids(self, uids: list):
@@ -42,11 +42,13 @@ class User:
             self.mobilePhoneNumber = None
         self.uid = snapshot_dict.get('uid', None)
         self.tokens = snapshot_dict.get('tokens', None)
+        self.isEditor = snapshot_dict.get('isEditor', None)
 
 
 class Team:
-    def __init__(self, teamID):
+    def __init__(self, teamID, editorsOnly):
         self.teamID = teamID
+        self.editorsOnly = editorsOnly
         self.users = []
         self.db = firestore.client()
         self.__init_users()
@@ -55,7 +57,10 @@ class Team:
         docs = self.db.collection("users").where("teamID", "==", self.teamID).get()
         for doc in docs:
             user = User(doc.to_dict())
-            self.add_user(user)
+            if self.editorsOnly and user.isEditor:
+                self.add_user(user)
+            elif not self.editorsOnly:
+                self.add_user(user)
 
     def get_tokens(self):
         """:return active Firebase Authentication tokens for all members in team"""
@@ -66,10 +71,12 @@ class Team:
         self.users.append(user)
 
     def get_voice_phone_numbers(self):
-        return [user.voicePhoneNumber for user in self.users if user.voicePhoneNumber is not None and user.voicePhoneNumber is not ""]
+        return [user.voicePhoneNumber for user in self.users if
+                user.voicePhoneNumber is not None and user.voicePhoneNumber is not ""]
 
     def get_mobile_phone_numbers(self):
-        return [user.mobilePhoneNumber for user in self.users if user.mobilePhoneNumber is not None and user.mobilePhoneNumber is not ""]
+        return [user.mobilePhoneNumber for user in self.users if
+                user.mobilePhoneNumber is not None and user.mobilePhoneNumber is not ""]
 
     def get_uids(self):
         return [user.uid for user in self.users if user.uid is not None]

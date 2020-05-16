@@ -9,8 +9,8 @@ class MyMessage:
         self.needForAction = page['needForAction']['stringValue']
         self.address = page['address']['stringValue']
         self.creator = page['creator']['stringValue']
-        print(event)
-        self.onlyEditors = page['onlyEditors']['stringValue'] == 'true'
+        self.onlyEditors = page['onlyEditors']['booleanValue']
+        assert(self.onlyEditors is bool)
         self.uids = []
 
     def set_uids(self, uids: list):

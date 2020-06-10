@@ -21,5 +21,5 @@ if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
-    team = Team(teamID, message.onlyEditors)
+    team = Team(teamID, False)
     send_email(test_event, team)

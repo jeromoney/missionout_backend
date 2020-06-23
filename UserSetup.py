@@ -7,9 +7,14 @@ from firebase_admin import firestore
 
 def user_setup(event: dict):
     db = firestore.client()
-    print(event)
     email = event.get('email', None)
-    domain = email.split('@')[1]
+    # If a user signs in with a password, they don't need to prove they own their email, which creates a security risk.
+    # Instead a DBA will need to manually approve email/password sign ins.
+    provider = event['providerData'][0]['providerId']
+    if (provider != 'password'):
+        domain = email.split('@')[1]
+    else:
+        domain = None
     # Check if domain is already a team. If so, automatically assign them to team.
     # If not, assign None which the app will pick up as not on a team
     doc = db.document('teamDomains/domains').get().to_dict()

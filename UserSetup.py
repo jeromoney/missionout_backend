@@ -7,6 +7,7 @@ from firebase_admin import firestore
 
 def user_setup(event: dict):
     db = firestore.client()
+    print(event)
     email = event.get('email', None)
     domain = email.split('@')[1]
     # Check if domain is already a team. If so, automatically assign them to team.

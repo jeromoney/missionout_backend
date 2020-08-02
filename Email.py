@@ -8,7 +8,7 @@ from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 
 
 def send_email(event: dict, team: Team):
-    db = firestore.client()
+    db = team.db
     message = MyMessage(event)
     message.uids = team.get_uids()
     email = message.get_email()

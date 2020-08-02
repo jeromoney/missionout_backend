@@ -16,7 +16,7 @@ def send_page(event: dict, _):
     """Function is the entry way for the google cloud function environment"""
     FirebaseSetup.setup_firebase_gcf_environment()
     teamID = Utils.get_teamID_from_event(event)
-    message =  MyMessage(event)
+    message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
     page_functions = [make_phone_call, send_text_message, send_fcm_notification, send_email]
     pool = ThreadPoolExecutor()

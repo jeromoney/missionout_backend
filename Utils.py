@@ -4,7 +4,7 @@ TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"create
                         '\"description\": {\"stringValue\": \"A puppy got hurt\"}, \"time\": {\"timestampValue\": ' \
                         '\"2020-02-20T22:08:29.415Z\"}, \"onlyEditors\": {\"booleanValue\": ' \
                         'true}}, \"name\": \"projects/missionout/databases/(' \
-                        'default)/documents/teams/demo_team.com/missions/wLZ6aZy6pVRBJBCkZXeu/pages' \
+                        'default)/documents/teams/demoteam.com/missions/wLZ6aZy6pVRBJBCkZXeu/pages' \
                         '/icGulF5jyDuqBMnyuD2I\", \"updateTime\": \"2020-02-20T22:08:29.494223Z\"}}'
 
 def get_teamID_from_event(event):

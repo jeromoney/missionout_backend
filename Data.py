@@ -29,17 +29,6 @@ class MyMessage:
 
 class User:
     def __init__(self, snapshot_dict: dict):
-        try:
-            self.voicePhoneNumber = snapshot_dict['voicePhoneNumber']['phoneNumber']
-        except KeyError:
-            print("Phone number doesn't exist or in old format")
-            self.voicePhoneNumber = None
-
-        try:
-            self.mobilePhoneNumber = snapshot_dict['mobilePhoneNumber']['phoneNumber']
-        except KeyError:
-            print("Phone number doesn't exist or in old format")
-            self.mobilePhoneNumber = None
         self.uid = snapshot_dict.get('uid', None)
         self.tokens = snapshot_dict.get('tokens', None)
         self.isEditor = snapshot_dict.get('isEditor', None)
@@ -52,6 +41,18 @@ class Team:
         self.users = []
         self.db = firestore.client()
         self.__init_users()
+        # access all numbers in /teams/{teamID}/phoneNumbers/{phoneNumbers}
+        self.mobile_numbers = []
+        self.voice_phone_numbers = []
+        docs = self.db.collection(f'teams/{teamID}/phoneNumbers').stream()
+        for doc in docs:
+            phone_number = doc.get('phoneNumber')
+            if phone_number is None:
+                continue
+            if doc.get('allowCalls'):
+                self.voice_phone_numbers.append(phone_number)
+            if doc.get('allowText'):
+                self.mobile_numbers.append(phone_number)
 
     def __init_users(self):
         docs = self.db.collection("users").where("teamID", "==", self.teamID).get()
@@ -71,12 +72,10 @@ class Team:
         self.users.append(user)
 
     def get_voice_phone_numbers(self):
-        return [user.voicePhoneNumber for user in self.users if
-                user.voicePhoneNumber is not None and user.voicePhoneNumber is not ""]
+        return self.voice_phone_numbers
 
     def get_mobile_phone_numbers(self):
-        return [user.mobilePhoneNumber for user in self.users if
-                user.mobilePhoneNumber is not None and user.mobilePhoneNumber is not ""]
+        return self.mobile_numbers
 
     def get_uids(self):
         return [user.uid for user in self.users if user.uid is not None]

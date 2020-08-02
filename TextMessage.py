@@ -9,7 +9,6 @@ from Data import MyMessage, Team
 import json
 from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from datetime import datetime
 
 DELAY = 30 # Seconds. Gives the FCM notifications a 30 second hard start before being sent. The text message notification
            # sound can overrun the louder FCM notification.

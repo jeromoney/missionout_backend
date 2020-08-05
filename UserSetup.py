@@ -29,10 +29,11 @@ def user_setup(event: dict):
                  'displayName': event.get('displayName'),
                  'teamID': assignedDomain,
                  'email': email,
-                 'dateCreated': db.SERVER_TIMESTAMP}
+                 'dateCreated': firestore.SERVER_TIMESTAMP}
     db.collection('users').document(uid).set(user_info)
+
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
-    test_event = {'uid': 'some uid', 'displayName': 'Joe Blow', 'email': 'joe.blow@chaffeecountysarnorth.org'}
+    test_event = {'providerData': [{'providerId': 'demoteam.com'}], 'uid': 'some uid', 'displayName': 'Joe Blow', 'email': 'joe.blow@chaffeecountysarnorth.org'}
     user_setup(test_event)

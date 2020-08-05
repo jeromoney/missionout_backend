@@ -28,7 +28,8 @@ def user_setup(event: dict):
                  'uid': uid,
                  'displayName': event.get('displayName'),
                  'teamID': assignedDomain,
-                 'email': email}
+                 'email': email,
+                 'dateCreated': db.SERVER_TIMESTAMP}
     db.collection('users').document(uid).set(user_info)
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@ def createMessage(event):
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'description': message.description,
         'needForAction': message.needForAction,
-        'address': message.address,
+        'missionDocumentPath': message.missionDocumentPath,
         'creator': message.creator,
         'sound': 'src/res/raw/school_fire_alarm.mp3'
     }
@@ -25,13 +25,14 @@ def send_fcm_notification(event: dict, team: Team):
     data = createMessage(event)
     tokens = team.get_tokens()
     message = messaging.MulticastMessage(
-        apns=messaging.APNSConfig(payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a",badge=1))),
+        apns=messaging.APNSConfig(
+            payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a", badge=1))),
         android=messaging.AndroidConfig(
             notification=messaging.AndroidNotification(
                 priority="high",
                 click_action="FLUTTER_NOTIFICATION_CLICK",
                 channel_id="mission_pages",
-            sound="school_fire_alarm"), ),
+                sound="school_fire_alarm"), ),
         notification=messaging.Notification(title=data["description"], body=data["needForAction"],
                                             )
         ,

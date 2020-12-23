@@ -7,7 +7,7 @@ class MyMessage:
         page = event['value']['fields']
         self.description = page['description']['stringValue']
         self.needForAction = page['needForAction']['stringValue']
-        self.address = page['address']['stringValue']
+        self.missionDocumentPath = page['missionDocumentPath']['stringValue']
         self.creator = page['creator']['stringValue']
         self.onlyEditors = page['onlyEditors']['booleanValue']
         assert (type(self.onlyEditors) is bool)

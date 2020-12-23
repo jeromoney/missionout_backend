@@ -1,6 +1,8 @@
 from firebase_admin import firestore
 from itertools import chain
 
+from google.cloud.exceptions import NotFound
+
 
 class MyMessage:
     def __init__(self, event):
@@ -87,4 +89,7 @@ class Team:
                 if user.tokens is not None and token in user.tokens:
                     # delete token
                     doc = self.db.collection("users").document(user.uid)
-                    doc.update({'tokens': firestore.firestore.ArrayRemove([token])})
+                    try:
+                        doc.update({'tokens': firestore.firestore.ArrayRemove([token])})
+                    except NotFound:
+                        pass

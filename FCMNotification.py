@@ -36,12 +36,12 @@ def send_fcm_notification(event: dict, team: Team):
         notification=messaging.Notification(title=data["description"], body=data["needForAction"],
                                             )
         ,
+        data={"missionDocumentPath":data["missionDocumentPath"]},
         tokens=tokens
     )
     responses = messaging.send_multicast(message)
     print(F"Sent {len(tokens)} FCM messages")
     if responses.failure_count > 0:
-        print('Sending broadcast message since some messages did not go through')
         # clean up expired tokens.
         erroneous_tokens = [tokens[i] for i, response in enumerate(responses.responses) if
                             isinstance(response.exception, UnregisteredError)]

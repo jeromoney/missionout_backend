@@ -68,7 +68,7 @@ class Team:
     def get_tokens(self):
         """:return active Firebase Authentication tokens for all members in team"""
         # need to collapse all token lists to a single list
-        return list(chain.from_iterable([user.tokens for user in self.users if user.tokens is not None]))
+        return list(set(chain.from_iterable([user.tokens for user in self.users if user.tokens is not None])))
 
     def add_user(self, user):
         self.users.append(user)

@@ -36,7 +36,7 @@ def send_fcm_notification(event: dict, team: Team):
         notification=messaging.Notification(title=data["description"], body=data["needForAction"],
                                             )
         ,
-        data={"missionDocumentPath":data["missionDocumentPath"]},
+        data={"missionDocumentPath": data["missionDocumentPath"]},
         tokens=tokens
     )
     responses = messaging.send_multicast(message)

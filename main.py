@@ -1,6 +1,7 @@
 # Entry way for google cloud functions.
 from concurrent.futures.thread import ThreadPoolExecutor
 
+import DeleteUserData
 import FirebaseSetup
 import UserSetup
 import Utils
@@ -31,3 +32,8 @@ def user_setup(event: dict, _):
     """Function is the entry way for the google cloud function environment"""
     FirebaseSetup.setup_firebase_gcf_environment()
     UserSetup.user_setup(event)
+
+def delete_user_data(event: dict, _):
+    """Function is the entry way for the google cloud function environment"""
+    FirebaseSetup.setup_firebase_gcf_environment()
+    DeleteUserData.delete_user_data(event)

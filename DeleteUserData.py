@@ -12,6 +12,7 @@ def delete_user_data(event: dict):
     uid = event.get('uid', None)
     db.collection('users').document(uid).delete()
 
+
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
     test_event = {"email": "me@example.com",

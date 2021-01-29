@@ -6,8 +6,10 @@ from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from Data import MyMessage, Team
 import json
 
+NOTIFICATION_TAG = "close_missionout_notification"
 
-def createMessage(event):
+
+def create_message(event):
     message = MyMessage(event)
     data = {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -22,13 +24,15 @@ def createMessage(event):
 
 def send_fcm_notification(event: dict, team: Team):
     # apologies for the hack below. I need to pair both tokens and the uids
-    data = createMessage(event)
+    data = create_message(event)
     tokens = team.get_tokens()
     message = messaging.MulticastMessage(
         apns=messaging.APNSConfig(
+            headers={"apns-collapse-id": NOTIFICATION_TAG},
             payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a", badge=1))),
         android=messaging.AndroidConfig(
             notification=messaging.AndroidNotification(
+                tag=NOTIFICATION_TAG,
                 priority="high",
                 click_action="FLUTTER_NOTIFICATION_CLICK",
                 channel_id="mission_pages",

@@ -10,8 +10,12 @@ def user_setup(event: dict):
     email = event.get('email', None)
     # If a user signs in with a password, they don't need to prove they own their email, which creates a security risk.
     # Instead a DBA will need to manually approve email/password sign ins.
-    provider = event['providerData'][0]['providerId']
-    if (provider != 'password'):
+    if 'providerData' in event.keys():
+        provider = event['providerData'][0]['providerId']
+    else:
+        print("Error in event data: " + str(event))
+        return
+    if provider != 'password':
         domain = email.split('@')[1]
     else:
         domain = None
@@ -19,15 +23,15 @@ def user_setup(event: dict):
     # If not, assign None which the app will pick up as not on a team
     doc = db.document('teamDomains/domains').get().to_dict()
     if domain in doc['domains']:
-        assignedDomain = domain
+        assigned_domain = domain
     else:
-        assignedDomain = None
+        assigned_domain = None
 
     uid = event['uid']
     user_info = {'isEditor': False,
                  'uid': uid,
                  'displayName': event.get('displayName'),
-                 'teamID': assignedDomain,
+                 'teamID': assigned_domain,
                  'email': email,
                  'dateCreated': firestore.SERVER_TIMESTAMP}
     db.collection('users').document(uid).set(user_info)

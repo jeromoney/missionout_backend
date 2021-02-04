@@ -17,7 +17,6 @@ def create_message(event):
         'needForAction': message.needForAction,
         'missionDocumentPath': message.missionDocumentPath,
         'creator': message.creator,
-        'sound': 'src/res/raw/school_fire_alarm.mp3'
     }
     return data
 
@@ -36,7 +35,7 @@ def send_fcm_notification(event: dict, team: Team):
                 priority="high",
                 click_action="FLUTTER_NOTIFICATION_CLICK",
                 channel_id="mission_pages",
-                sound="school_fire_alarm"), ),
+            ), ),
         notification=messaging.Notification(title=data["description"], body=data["needForAction"],
                                             )
         ,

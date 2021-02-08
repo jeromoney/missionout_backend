@@ -46,10 +46,12 @@ def send_fcm_notification(event: dict, team: Team):
                 priority="high",
                 click_action="FLUTTER_NOTIFICATION_CLICK",
                 channel_id="mission_pages",
-            ), ),
-        notification=messaging.Notification(title=data["description"], body=data["needForAction"],
-                                            )
-        ,
+            ),
+        ),
+        notification=messaging.Notification(
+            title=data["description"],
+            body=data["needForAction"],
+        ),
         data={"missionDocumentPath": data["missionDocumentPath"]},
         tokens=tokens
     )

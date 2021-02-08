@@ -1,5 +1,6 @@
 from firebase_admin import messaging
 from firebase_admin._messaging_utils import UnregisteredError
+from firebase_admin.messaging import CriticalSound
 
 import FirebaseSetup
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
@@ -28,7 +29,17 @@ def send_fcm_notification(event: dict, team: Team):
     message = messaging.MulticastMessage(
         apns=messaging.APNSConfig(
             headers={"apns-collapse-id": NOTIFICATION_TAG},
-            payload=messaging.APNSPayload(aps=messaging.Aps(sound="school_fire_alarm.m4a", badge=1))),
+            payload=messaging.APNSPayload(
+                aps=messaging.Aps(
+                    sound=CriticalSound(
+                        name="school_fire_alarm.m4a",
+                        critical=True,
+                        volume=1.0
+                    ),
+                    badge=1
+                )
+            )
+        ),
         android=messaging.AndroidConfig(
             notification=messaging.AndroidNotification(
                 tag=NOTIFICATION_TAG,

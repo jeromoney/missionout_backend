@@ -1,0 +1,44 @@
+from pushy import PushyAPI
+import Secrets
+
+import FirebaseSetup
+from Utils import TEST_RESOURCE_STR, get_teamID_from_event
+from Data import MyMessage, Team
+import json
+
+
+def send_pushy_notification(event: dict, team: Team, cloud_environment=True):
+    if cloud_environment:
+        pushy_secret_api_key = Secrets.pushy_secret_api_key()
+    else:
+        from config import PUSHY_SECRET_API_KEY  # This will break if run from cloud
+        pushy_secret_api_key = PUSHY_SECRET_API_KEY
+
+    # Payload data you want to send to devices
+    data = {"message": "Hello World!"}
+
+    # The recipient device tokens
+    to = team.get_pushy_tokens()
+
+    # Optional push notification options (such as iOS notification fields)
+    options = {
+        "notification": {
+            "badge": 1,
+            "sound": {
+                "name": "school_fire_alarm.m4a",
+                "critical": 1,
+                "volume": 1.0},
+            "body": u"Hello World \u270c",
+        }
+    }
+
+    # Send the push notification with Pushy
+    PushyAPI.sendPushNotification(data, to, options, pushy_secret_api_key)
+
+
+if __name__ == "__main__":
+    FirebaseSetup.setup_firebase_local_environment()
+    test_event = json.loads(TEST_RESOURCE_STR)
+    teamID = get_teamID_from_event(test_event)
+    team = Team(teamID, False)
+    send_pushy_notification(test_event, team, cloud_environment=False)

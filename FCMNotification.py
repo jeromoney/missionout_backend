@@ -1,5 +1,4 @@
 from firebase_admin import messaging
-from firebase_admin._messaging_utils import UnregisteredError
 from firebase_admin.messaging import CriticalSound
 
 import FirebaseSetup
@@ -37,6 +36,7 @@ def apns_config(user: User):
     return messaging.APNSConfig(
         payload=messaging.APNSPayload(
             aps=messaging.Aps(
+                content_available=True,
                 sound=CriticalSound(
                     name=user.iOSSound if user.iOSSound is not None else "wakey_wakey.m4a",
                     critical=user.enableIOSCriticalAlerts,
@@ -59,7 +59,10 @@ def build_messages(user: User, data: dict):
                     title=data["description"],
                     body=data["needForAction"],
                 ),
-                data={"missionDocumentPath": data["missionDocumentPath"]},
+                data={"missionDocumentPath": data["missionDocumentPath"],
+                      "title": data["description"],
+                      "body": data["needForAction"],
+                      },
                 token=token
             )
         )

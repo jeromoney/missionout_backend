@@ -1,7 +1,7 @@
 google
 # Function dependencies, for example:
 # package>=version
-firebase-admin==4.0.0
-twilio==6.37.0
+firebase-admin==4.5.2
+twilio==6.52.0
 google-cloud==0.34.0
-google-cloud-secret-manager==0.2.0
+google-cloud-secret-manager==2.2.0

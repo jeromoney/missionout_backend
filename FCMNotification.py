@@ -34,6 +34,7 @@ def android_config():
 
 def apns_config(user: User):
     return messaging.APNSConfig(
+        headers={"apns-id": "345", "apns-collapse-id": "1234"},
         payload=messaging.APNSPayload(
             aps=messaging.Aps(
                 content_available=True,

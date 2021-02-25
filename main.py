@@ -20,7 +20,7 @@ def send_page(event: dict, _):
     teamID = Utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
-    page_functions = [send_pushy_notification, make_phone_call, send_text_message, send_fcm_notification, send_email]
+    page_functions = [send_pushy_notification, make_phone_call, send_text_message, send_email]
     pool = ThreadPoolExecutor()
     futures = []
     for function in page_functions:

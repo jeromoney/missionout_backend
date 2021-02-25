@@ -1,7 +1,6 @@
 import json
 from firebase_admin import firestore
 
-
 import FirebaseSetup
 from Data import Team, MyMessage
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
@@ -12,9 +11,10 @@ def send_email(event: dict, team: Team):
     message = MyMessage(event)
     message.uids = team.get_uids()
     email = message.get_email()
-    #timestamp email
-    email['timestamp']= firestore.SERVER_TIMESTAMP #SERVER_TIMESTAMP exists, not sure why IDE can't find it
-    db.collection('mail').document().set(email)
+    # timestamp email
+    email['timestamp'] = firestore.SERVER_TIMESTAMP  # SERVER_TIMESTAMP exists, not sure why IDE can't find it
+    result = db.collection('mail').document().set(email)
+    return "Email Result", result
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 # Entry way for google cloud functions.
+import json
 from concurrent.futures.thread import ThreadPoolExecutor
 
 import DeleteUserData
@@ -14,9 +15,11 @@ from PushyNotification import send_pushy_notification
 from Email import send_email
 
 
-def send_page(event: dict, _):
-    """Function is the entry way for the google cloud function environment"""
-    FirebaseSetup.setup_firebase_gcf_environment()
+def send_page(event: dict, _, local_environment=False):
+    if local_environment:
+        FirebaseSetup.setup_firebase_local_environment()
+    else:
+        FirebaseSetup.setup_firebase_gcf_environment()
     teamID = Utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
@@ -26,16 +29,23 @@ def send_page(event: dict, _):
     for function in page_functions:
         futures.append(pool.submit(function, *(event, team)))
     pool.shutdown(wait=True)
-    print(f"Outcome: ${futures}")
+    for future in futures:
+        try:
+            print(f"Outcome: {future.result()}")
+        except:
+            print(f"Exception: {future.exception()}")
 
 
 def user_setup(event: dict, _):
-    """Function is the entry way for the google cloud function environment"""
     FirebaseSetup.setup_firebase_gcf_environment()
     UserSetup.user_setup(event)
 
 
 def delete_user_data(event: dict, _):
-    """Function is the entry way for the google cloud function environment"""
     FirebaseSetup.setup_firebase_gcf_environment()
     DeleteUserData.delete_user_data(event)
+
+
+if __name__ == "__main__":
+    test_event = json.loads(Utils.TEST_RESOURCE_STR)
+    send_page(test_event, None, True)

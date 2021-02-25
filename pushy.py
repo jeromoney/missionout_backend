@@ -7,7 +7,7 @@ from urllib.error import HTTPError
 class PushyAPI:
 
     @staticmethod
-    def sendPushNotification(data, to, options, api_key):
+    def send_push_notification(data, to, options, api_key):
         # Insert your Pushy Secret API Key here
         # Default post data to provided options or empty object
         postData = options or {}
@@ -21,14 +21,14 @@ class PushyAPI:
 
         # Set Content-Type header since we're sending JSON
         req.add_header('Content-Type', 'application/json; charset=utf-8')
-        jsondata = json.dumps(postData)
-        jsondataasbytes = jsondata.encode('utf-8')
-        req.add_header('Content-Length', len(jsondataasbytes))
+        json_data = json.dumps(postData)
+        json_data_as_bytes = json_data.encode('utf-8')
+        req.add_header('Content-Length', len(json_data_as_bytes))
         try:
             # Actually send the push
-            request.urlopen(req, jsondataasbytes)
+            request.urlopen(req, json_data_as_bytes)
             # urlopen(req.full_url + json.dumps(postData))
         except HTTPError as e:
             # Print response errors
             print("Pushy API returned HTTP error " + str(e.code) + ": " + str(e))
-            print(str(jsondata))
+            print(str(json_data))

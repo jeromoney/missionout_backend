@@ -15,25 +15,29 @@ def send_pushy_notification(event: dict, team: Team, cloud_environment=True):
         pushy_secret_api_key = PUSHY_SECRET_API_KEY
 
     # Payload data you want to send to devices
-    data = {"message": "Hello World!"}
 
-    # The recipient device tokens
-    to = team.get_pushy_tokens()
+    message = MyMessage(event)
+    data = {"message": message.description}
 
-    # Optional push notification options (such as iOS notification fields)
-    options = {
-        "notification": {
-            "badge": 1,
-            "sound": {
-                "name": "school_fire_alarm.m4a",
-                "critical": 1,
-                "volume": 1.0},
-            "body": u"Hello World \u270c",
+    for user in team.users:
+        tokens = user.pushyTokens
+        if not tokens:
+            continue
+        # Optional push notification options (such as iOS notification fields)
+        options = {
+            "notification": {
+                "title": message.description,
+                "badge": 1,
+                "sound": {
+                    "name": user.iOSSound,
+                    "critical": int(user.enableIOSCriticalAlerts),
+                    "volume": user.iOSCriticalAlertsVolume},
+                "body": message.needForAction,
+            }
         }
-    }
 
-    # Send the push notification with Pushy
-    PushyAPI.sendPushNotification(data, to, options, pushy_secret_api_key)
+        # Send the push notification with Pushy
+        PushyAPI.send_push_notification(data, tokens, options, pushy_secret_api_key)
 
 
 if __name__ == "__main__":

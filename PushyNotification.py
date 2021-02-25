@@ -38,6 +38,7 @@ def send_pushy_notification(event: dict, team: Team, cloud_environment=True):
 
         # Send the push notification with Pushy
         PushyAPI.send_push_notification(data, tokens, options, pushy_secret_api_key)
+        return "Hello World"
 
 
 if __name__ == "__main__":

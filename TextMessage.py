@@ -10,8 +10,11 @@ import json
 from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 
-DELAY = 30 # Seconds. Gives the FCM notifications a 30 second head start before being sent. The text message notification
-           # sound can overrun the louder FCM notification.
+DELAY = 30  # Seconds. Gives the FCM notifications a 30 second head start before being sent. The text message
+# notification
+
+
+# sound can overrun the louder FCM notification.
 
 def send_text_message(event: dict, team: Team, cloud_environment=True):
     time.sleep(DELAY)

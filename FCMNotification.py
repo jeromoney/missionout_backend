@@ -39,6 +39,7 @@ def apns_config(user: User):
             aps=messaging.Aps(
                 content_available=True,
                 sound=CriticalSound(
+                    # wakey_wakey is a default option which should be installed on iOS devices
                     name=user.iOSSound if user.iOSSound is not None else "wakey_wakey.m4a",
                     critical=user.enableIOSCriticalAlerts,
                     volume=user.iOSCriticalAlertsVolume
@@ -91,4 +92,4 @@ if __name__ == '__main__':
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     myTeam = Team(teamID, False)
-    send_fcm_notification(test_event, myTeam)
+    print(send_fcm_notification(test_event, myTeam))

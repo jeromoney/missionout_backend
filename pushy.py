@@ -1,5 +1,4 @@
 import json
-import urllib
 from urllib import request
 from urllib.error import HTTPError
 
@@ -27,8 +26,7 @@ class PushyAPI:
         try:
             # Actually send the push
             request.urlopen(req, json_data_as_bytes)
-            # urlopen(req.full_url + json.dumps(postData))
+            return  "Successfully sent Pushy Request"
         except HTTPError as e:
             # Print response errors
-            print("Pushy API returned HTTP error " + str(e.code) + ": " + str(e))
-            print(str(json_data))
+            return "Pushy API returned HTTP error " + str(e.code) + ": " + str(e)

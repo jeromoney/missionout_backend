@@ -37,13 +37,12 @@ def send_pushy_notification(event: dict, team: Team, cloud_environment=True):
         }
 
         # Send the push notification with Pushy
-        PushyAPI.send_push_notification(data, tokens, options, pushy_secret_api_key)
-        return "Hello World"
+        return PushyAPI.send_push_notification(data, tokens, options, pushy_secret_api_key)
 
 
 if __name__ == "__main__":
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
-    team = Team(teamID, False)
-    send_pushy_notification(test_event, team, cloud_environment=False)
+    test_team = Team(teamID, False)
+    print(send_pushy_notification(test_event, test_team, cloud_environment=False))

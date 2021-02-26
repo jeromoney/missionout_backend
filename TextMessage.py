@@ -11,6 +11,8 @@ from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 
 DELAY = 30  # Seconds. Gives the FCM notifications a 30 second head start before being sent. The text message
+
+
 # notification
 
 
@@ -28,16 +30,21 @@ def send_text_message(event: dict, team: Team, cloud_environment=True):
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = MyMessage(event)
 
-    # These need to be changed automatically
     body = F"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"
-
+    result = {}
     for number in mobile_phone_numbers:
         text_call = client.messages.create(
             body=body,
             to=number,
             from_=PURCHASED_PHONE_NUMBER
         )
-        print("Status of Text Message sent to", number, "is", text_call)
+        status_str = str(text_call.status)
+        if status_str not in result.keys():
+            result[status_str] = 1
+        else:
+            result[status_str] += 1
+
+    return result
 
 
 if __name__ == '__main__':  # For testing
@@ -45,5 +52,5 @@ if __name__ == '__main__':  # For testing
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
-    team = Team(teamID, False)
-    send_text_message(test_event, team, cloud_environment=False)
+    test_team = Team(teamID, False)
+    print(send_text_message(test_event, test_team, cloud_environment=False))

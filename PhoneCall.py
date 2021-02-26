@@ -23,6 +23,7 @@ def make_phone_call(event: dict, team: Team, cloud_environment=True):
     need_for_action = parse.quote(message.needForAction)
     description = parse.quote(message.description)
     client = Client(account_sid, auth_token)
+    result = {}
     for number in voice_phone_numbers:
         call = client.calls.create(
             # URL is for static announcement
@@ -30,12 +31,17 @@ def make_phone_call(event: dict, team: Team, cloud_environment=True):
             to=number,
             from_=PURCHASED_PHONE_NUMBER
         )
-        print("Result of call", call)
+        status_str = str(call.status)
+        if status_str not in result.keys():
+            result[status_str] = 1
+        else:
+            result[status_str] += 1
+    return result
 
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
-    team = Team(teamID, False)
-    make_phone_call(test_event, team, cloud_environment=False)
+    test_team = Team(teamID, False)
+    print(make_phone_call(test_event, test_team, cloud_environment=False))

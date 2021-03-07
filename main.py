@@ -11,7 +11,6 @@ from Data import Team, MyMessage
 from TextMessage import send_text_message
 from FCMNotification import send_fcm_notification
 from PhoneCall import make_phone_call
-from PushyNotification import send_pushy_notification
 from Email import send_email
 
 
@@ -23,7 +22,7 @@ def send_page(event: dict, _, local_environment=False):
     teamID = Utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
-    page_functions = [send_pushy_notification, make_phone_call, send_text_message, send_email]
+    page_functions = [send_fcm_notification, make_phone_call, send_text_message, send_email]
     pool = ThreadPoolExecutor()
     futures = []
     for function in page_functions:

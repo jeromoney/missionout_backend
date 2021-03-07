@@ -28,6 +28,7 @@ def android_config():
             priority="high",
             click_action="FLUTTER_NOTIFICATION_CLICK",
             channel_id="mission_pages",
+            #sound="school_fire_alarm"
         ),
     )
 

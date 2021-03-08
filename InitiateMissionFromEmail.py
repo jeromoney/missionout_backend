@@ -8,7 +8,7 @@ Initiates a mission from a watched email account
 """
 
 
-def initiate_mission_from_email(event: dict, _, local_environment=False):
+def initiate_mission_from_email(event: dict, local_environment=False):
     print(f"my own special code:{event}")
 
 

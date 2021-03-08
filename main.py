@@ -12,6 +12,7 @@ from TextMessage import send_text_message
 from FCMNotification import send_fcm_notification
 from PhoneCall import make_phone_call
 from Email import send_email
+import InitiateMissionFromEmail
 
 
 def send_page(event: dict, _, local_environment=False):
@@ -42,8 +43,9 @@ def delete_user_data(event: dict, _):
     FirebaseSetup.setup_firebase_gcf_environment()
     DeleteUserData.delete_user_data(event)
 
+
 def initiate_mission_from_email(event: dict, _):
-    pass
+    InitiateMissionFromEmail.initiate_mission_from_email(event=event)
 
 
 if __name__ == "__main__":

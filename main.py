@@ -42,6 +42,9 @@ def delete_user_data(event: dict, _):
     FirebaseSetup.setup_firebase_gcf_environment()
     DeleteUserData.delete_user_data(event)
 
+def initiate_mission_from_email(event: dict, _):
+    pass
+
 
 if __name__ == "__main__":
     test_event = json.loads(Utils.TEST_RESOURCE_STR)

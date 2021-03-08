@@ -32,8 +32,7 @@ class MyMessage:
 class User:
     def __init__(self, snapshot_dict: dict):
         self.uid = snapshot_dict.get('uid', None)
-        self.tokens = snapshot_dict.get('tokens', None)
-        self.pushyTokens = snapshot_dict.get('pushyTokens', None)
+        self.tokens = snapshot_dict.get('tokens', [])
         self.isEditor = snapshot_dict.get('isEditor', None)
         self.enableIOSCriticalAlerts = snapshot_dict.get('enableIOSCriticalAlerts', False)
         self.iOSCriticalAlertsVolume = snapshot_dict.get('iOSCriticalAlertsVolume', 1.0)
@@ -73,11 +72,6 @@ class Team:
         """:return active Firebase Authentication tokens for all members in team"""
         # need to collapse all token lists to a single list
         return list(set(chain.from_iterable([user.tokens for user in self.users if user.tokens is not None])))
-
-    def get_pushy_tokens(self):
-        """:return active Pushy tokens for all members in team"""
-        # need to collapse all token lists to a single list
-        return list(set(chain.from_iterable([user.pushyTokens for user in self.users if user.pushyTokens is not None])))
 
     def add_user(self, user):
         self.users.append(user)

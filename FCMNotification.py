@@ -1,41 +1,40 @@
-from firebase_admin import messaging
-from firebase_admin.messaging import CriticalSound
+from firebase_admin import messaging, firestore
+from firebase_admin._messaging_utils import UnregisteredError
+from firebase_admin.messaging import CriticalSound, BatchResponse
+from google.cloud.firestore_v1 import WriteBatch
+from google.cloud.firestore_v1.client import Client
+from typing import List
 
 import FirebaseSetup
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from Data import MyMessage, Team, User
 import json
 
-NOTIFICATION_TAG = "close_missionout_notification"
+
+class __UserTokenPair:
+    def __init__(self, uid: str, token: str):
+        self.uid = uid
+        self.token = token
 
 
-def create_message(event):
-    message = MyMessage(event)
-    data = {
-        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-        'description': message.description,
-        'needForAction': message.needForAction,
-        'missionDocumentPath': message.missionDocumentPath,
-        'creator': message.creator,
-    }
-    return data
+class __UserWithTokens:
+    def __init__(self, uid: str, tokens: List[str]):
+        self.uid = uid
+        self.tokens = tokens
 
 
-def android_config():
+def __android_config():
     return messaging.AndroidConfig(
         notification=messaging.AndroidNotification(
-            tag=NOTIFICATION_TAG,
             priority="high",
             click_action="FLUTTER_NOTIFICATION_CLICK",
             channel_id="mission_pages",
-            #sound="school_fire_alarm"
         ),
     )
 
 
-def apns_config(user: User):
+def __apns_config(user: User):
     return messaging.APNSConfig(
-        headers={"apns-id": "345", "apns-collapse-id": "1234"},
         payload=messaging.APNSPayload(
             aps=messaging.Aps(
                 content_available=True,
@@ -51,41 +50,56 @@ def apns_config(user: User):
     )
 
 
-def build_messages(user: User, data: dict):
-    user_messages = []
+def __build_messages(user: User, data: MyMessage):
+    user_messages: List[messaging.Message] = []
     for token in user.tokens:
         user_messages.append(
             messaging.Message(
-                apns=apns_config(user),
-                android=android_config(),
+                apns=__apns_config(user),
+                android=__android_config(),
                 notification=messaging.Notification(
-                    title=data["description"],
-                    body=data["needForAction"],
+                    title=data.description,
+                    body=data.needForAction,
                 ),
-                data={"missionDocumentPath": data["missionDocumentPath"],
-                      "title": data["description"],
-                      "body": data["needForAction"],
-                      },
                 token=token
             )
         )
     return user_messages
 
 
-def send_fcm_notification(event: dict, team: Team):
-    # apologies for the hack below. I need to pair both tokens and the uids
-    data = create_message(event)
-    messages = []
-    for user in team.users:
-        messages += build_messages(user, data)
-    responses = messaging.send_all(messages)
+def __cleanup_tokens(responses: BatchResponse, tokens: List[__UserTokenPair]):
+    bad_tokens: List[__UserTokenPair] = []
+    for i, response in enumerate(responses.responses):
+        if not response.success:
+            if type(response.exception) is UnregisteredError:
+                bad_tokens.append(tokens[i])
+    # for each token in the list, combine the tokens into one list
+    uids = set([token.uid for token in bad_tokens])
+    uid_pairs: List[__UserWithTokens] = []
+    for uid in uids:
+        userWithTokens = __UserWithTokens(uid=uid, tokens=[token.token for token in bad_tokens if token.uid == uid])
+        uid_pairs.append(userWithTokens)
+    # delete all the tokens
+    db = firestore.client()
+    assert (isinstance(db, Client))
+    batch = db.batch()
+    assert (isinstance(batch, WriteBatch))
+    for uid_pair in uid_pairs:
+        assert (isinstance(uid_pair, __UserWithTokens))
+        doc_ref = db.collection(u'users').document(uid_pair.uid)
+        doc_ref.update({u'tokens': firestore.ArrayRemove(uid_pair.tokens)})
 
-    # if responses.failure_count > 0:
-    #     # clean up expired tokens.
-    #     erroneous_tokens = [tokens[i] for i, response in enumerate(responses.responses) if
-    #                         isinstance(response.exception, UnregisteredError)]
-    #     team.delete_tokens(erroneous_tokens)
-    return responses
+
+def send_fcm_notification(event: dict, team: Team):
+    messageData = MyMessage(event)
+    messages: List[messaging.Message] = []
+    tokens: List[__UserTokenPair] = []
+    for user in team.users:
+        tokens += [__UserTokenPair(uid=user.uid, token=token) for token in user.tokens]
+        messages += __build_messages(user, messageData)
+    responses = messaging.send_all(messages)
+    __cleanup_tokens(responses, tokens)
+    return f"FCM: Sent {len(responses.responses)} messages with {responses.failure_count} failures"
 
 
 if __name__ == '__main__':

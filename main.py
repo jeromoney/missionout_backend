@@ -24,9 +24,7 @@ def send_page(event: dict, _, local_environment=False):
     team = Team(teamID, message.onlyEditors)
     page_functions = [send_fcm_notification, make_phone_call, send_text_message, send_email]
     pool = ThreadPoolExecutor()
-    futures = []
-    for function in page_functions:
-        futures.append(pool.submit(function, *(event, team)))
+    futures = [pool.submit(function, *(event, team)) for function in page_functions]
     pool.shutdown(wait=True)
     for future in futures:
         try:

@@ -13,8 +13,8 @@ def send_email(event: dict, team: Team):
     email = message.get_email()
     # timestamp email
     email['timestamp'] = firestore.SERVER_TIMESTAMP  # SERVER_TIMESTAMP exists, not sure why IDE can't find it
-    result = db.collection('mail').document().set(email)
-    return "Email Result", result
+    db.collection('mail').document().set(email)
+    return "Email Result: added email request to Firestore"
 
 
 if __name__ == '__main__':

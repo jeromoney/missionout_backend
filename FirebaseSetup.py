@@ -1,11 +1,14 @@
 import firebase_admin
 from firebase_admin import credentials
 
+
 CREDENTIALS_FILE = "credentials.json"
 
 
 def setup_firebase_local_environment():
-    cred = credentials.Certificate(CREDENTIALS_FILE)
+    import os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    cred = credentials.Certificate('/'.join([dir_path, CREDENTIALS_FILE]))
     firebase_admin.initialize_app(cred, {'databaseURL': 'https://missionout.firebaseio.com'})
     return cred
 

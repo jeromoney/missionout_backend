@@ -17,7 +17,12 @@ def twilio_secrets():
     return account_sid, auth_token
 
 
-def mission_email():
+def mission_email(local_environment=False):
+    if local_environment:
+        import os
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        secret_manager_json = '/'.join([dir_path, "../secrets/secret_manager.json"])
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = secret_manager_json
     client = secretmanager.SecretManagerServiceClient()
     response = client.access_secret_version(name=MISSION_EMAIL)
     return response.payload.data.decode('UTF-8')

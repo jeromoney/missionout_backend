@@ -28,10 +28,10 @@ def main():
         'labelIds': ['INBOX'],
         'topicName': TOPIC
     }
-    gmail.users().stop(userId=Secrets.mission_email()).execute()
-    return gmail.users().watch(userId=Secrets.mission_email(), body=request).execute()
+    gmail.users().stop(userId=Secrets.mission_email(local_environment=True)).execute()
+    return gmail.users().watch(userId=Secrets.mission_email(local_environment=True), body=request).execute()
 
 
 if __name__ == '__main__':
     FirebaseSetup.setup_firebase_local_environment()
-    main()
+    print(main())

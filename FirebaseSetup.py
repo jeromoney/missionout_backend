@@ -1,19 +1,18 @@
 import firebase_admin
-from firebase_admin import credentials
 
 
-CREDENTIALS_FILE = "credentials.json"
+def setup_firebase_environment(local_environment=False):
+    if local_environment:
+        import os
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/justin/PycharmProjects/secrets/firebase_credentials.json"
+        os.environ["FIREBASE_CONFIG"] = "/Users/justin/PycharmProjects/secrets/firebase_credentials.json"
+    try:
+        app = firebase_admin.initialize_app()
+        assert (type(app) is firebase_admin.App)
+        return app
+    except ValueError:
+        print("App is already initialized")
 
 
-def setup_firebase_local_environment():
-    import os
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    cred = credentials.Certificate('/'.join([dir_path, CREDENTIALS_FILE]))
-    firebase_admin.initialize_app(cred, {'databaseURL': 'https://missionout.firebaseio.com'})
-    return cred
-
-
-def setup_firebase_gcf_environment():
-    if not len(firebase_admin._apps):
-        # ensures that app hasn't already been initialized
-        firebase_admin.initialize_app()
+if __name__ == '__main__':
+    print(setup_firebase_environment(local_environment=True))

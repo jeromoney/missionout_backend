@@ -7,6 +7,8 @@ from firebase_admin import firestore
 
 # Classes must match definition from flutter client app
 import FirebaseSetup
+import Secrets
+from Email2Mission import EmailUtils
 
 
 class Mission:
@@ -34,11 +36,21 @@ class Page:
 PAGE_PATH = 'teams/{teamID}/missions/{missionID}/pages'
 
 
+def get_latest_email():
+    gmail, _ = EmailUtils.get_gmail_credentials()
+
+    # get history ID from push notification
+    myHistory = gmail.users().history().list(userId="sfsfsdfsdfsf@gmail.com", startHistoryId="2905635").execute()
+
+    foo = gmail.users().messages().get(id='178193c81c9bd9b5', userId="dfsfsdfsfs@gmail.com").execute()
+    print(foo)
+
+
 def foo(local_environment=False):
     if local_environment:
         FirebaseSetup.setup_firebase_local_environment()
     else:
-        FirebaseSetup.setup_firebase_gcf_environment()
+        FirebaseSetup.setup_firebase_environment()
     # Build Mission from incoming email
     mission = Mission()
     # Build Page from Mission
@@ -53,4 +65,5 @@ def foo(local_environment=False):
 
 
 if __name__ == '__main__':
-    foo(local_environment=True)
+    # foo(local_environment=True)
+    get_latest_email()

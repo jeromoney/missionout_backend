@@ -4,7 +4,7 @@
 import time
 import FirebaseSetup
 from Secrets import twilio_secrets
-from Twilio_Config import PURCHASED_PHONE_NUMBER
+from NotificationServices.Twilio_Config import PURCHASED_PHONE_NUMBER
 from Data import MyMessage, Team
 import json
 from twilio.rest import Client
@@ -15,7 +15,6 @@ DELAY = 30  # Seconds
 
 
 def send_text_message(event: dict, team: Team, cloud_environment=True):
-
     if cloud_environment:
         """
         Gives the FCM notifications a 30 second head start before being sent. The text message notification sound can overrun
@@ -37,7 +36,8 @@ def send_text_message(event: dict, team: Team, cloud_environment=True):
         text_call = client.messages.create(
             body=body,
             to=number,
-            from_=PURCHASED_PHONE_NUMBER
+            from_=PURCHASED_PHONE_NUMBER,
+            status_callback=None,
         )
         status_str = str(text_call.status)
         if status_str not in result.keys():
@@ -50,7 +50,7 @@ def send_text_message(event: dict, team: Team, cloud_environment=True):
 
 if __name__ == '__main__':  # For testing
 
-    FirebaseSetup.setup_firebase_local_environment()
+    FirebaseSetup.setup_firebase_environment(local_environment=True)
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

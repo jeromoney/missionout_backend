@@ -8,18 +8,14 @@ import UserSetup
 import Utils
 
 from Data import Team, MyMessage
-from TextMessage import send_text_message
-from FCMNotification import send_fcm_notification
-from PhoneCall import make_phone_call
-from Email import send_email
-import InitiateMissionFromEmail
+from NotificationServices.TextMessage import send_text_message
+from NotificationServices.FCMNotification import send_fcm_notification
+from NotificationServices.PhoneCall import make_phone_call
+from NotificationServices.Email import send_email
 
 
 def send_page(event: dict, _, local_environment=False):
-    if local_environment:
-        FirebaseSetup.setup_firebase_local_environment()
-    else:
-        FirebaseSetup.setup_firebase_gcf_environment()
+    FirebaseSetup.setup_firebase_environment(local_environment=local_environment)
     teamID = Utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
@@ -35,19 +31,19 @@ def send_page(event: dict, _, local_environment=False):
 
 
 def user_setup(event: dict, _):
-    FirebaseSetup.setup_firebase_gcf_environment()
+    FirebaseSetup.setup_firebase_environment()
     UserSetup.user_setup(event)
 
 
 def delete_user_data(event: dict, _):
-    FirebaseSetup.setup_firebase_gcf_environment()
+    FirebaseSetup.setup_firebase_environment()
     DeleteUserData.delete_user_data(event)
 
 
 def initiate_mission_from_email(event: dict, _):
-    InitiateMissionFromEmail.initiate_mission_from_email(event=event)
+    pass
 
 
 if __name__ == "__main__":
     test_event = json.loads(Utils.TEST_RESOURCE_STR)
-    send_page(test_event, None, True)
+    send_page(test_event, None, local_environment=True)

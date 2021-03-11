@@ -5,7 +5,7 @@ from twilio.rest import Client
 
 import FirebaseSetup
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from Twilio_Config import PURCHASED_PHONE_NUMBER, CALL_SCRIPT_URL
+from NotificationServices.Twilio_Config import PURCHASED_PHONE_NUMBER, CALL_SCRIPT_URL
 from Data import MyMessage, Team
 from Secrets import twilio_secrets
 
@@ -40,7 +40,7 @@ def make_phone_call(event: dict, team: Team, cloud_environment=True):
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_local_environment()
+    FirebaseSetup.setup_firebase_environment(local_environment=True)
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

@@ -5,6 +5,5 @@ config.py
 bin/
 lib/
 venv/
-/message_format.json
 /scratch.py
 /Email2Mission/token.pickle

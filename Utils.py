@@ -1,3 +1,5 @@
+import os
+
 TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": ' \
                     '\"2020-02-20T22:08:29.494223Z\", ' \
                     '\"fields\": {\"needForAction\": {\"stringValue\": \"we need kisses for the puppy\"}, ' \
@@ -21,7 +23,18 @@ def get_teamID_from_event(event):
         raise ValueError('expected to find teamID in path')
 
 
+def is_local_environment():
+    result = os.getenv("LOCAL_ENVIRONMENT", default=False)
+    return result == 'True'
+
+
+def set_local_environment():
+    os.environ["LOCAL_ENVIRONMENT"] = 'True'
+    assert is_local_environment()
+
+
 if __name__ == "__main__":
     import json
+
     test_event = json.loads(TEST_RESOURCE_STR)
     print(get_teamID_from_event(test_event))

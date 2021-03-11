@@ -14,8 +14,8 @@ from NotificationServices.PhoneCall import make_phone_call
 from NotificationServices.Email import send_email
 
 
-def send_page(event: dict, _, local_environment=False):
-    FirebaseSetup.setup_firebase_environment(local_environment=local_environment)
+def send_page(event: dict, _):
+    FirebaseSetup.setup_firebase_environment()
     teamID = Utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
@@ -40,10 +40,13 @@ def delete_user_data(event: dict, _):
     DeleteUserData.delete_user_data(event)
 
 
-def initiate_mission_from_email(event: dict, _):
-    pass
+def oauth_creator(event: dict, _):
+    from Email2Mission import OauthCreator
+    OauthCreator.oauth_creator()
 
 
 if __name__ == "__main__":
+    import os
+    os.environ["LOCAL_ENVIRONMENT"] = 'True'
     test_event = json.loads(Utils.TEST_RESOURCE_STR)
-    send_page(test_event, None, local_environment=True)
+    send_page(test_event, None)

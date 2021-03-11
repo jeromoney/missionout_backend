@@ -3,9 +3,9 @@ import FirebaseSetup
 import firebase_admin
 
 
-class MyTestCase(unittest.TestCase):
+class FirebaseTestCase(unittest.TestCase):
     def test_something(self):
-        app = FirebaseSetup.setup_firebase_environment(local_environment=True)
+        app = FirebaseSetup.setup_firebase_environment()
         self.assertTrue(type(app) is firebase_admin.App)
 
 

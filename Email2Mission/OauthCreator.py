@@ -1,9 +1,11 @@
-
 import flask
+import json
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 import google_auth_oauthlib.flow
 
+import Secrets
+import Utils
 from Email2Mission import EmailUtils
 
 """
@@ -24,13 +26,15 @@ def oauth_creator():
             print('Refreshing Access Token...')
             creds.refresh(Request())
         else:
-            print('Refreshing new tokens...')
-            flow = google_auth_oauthlib.flow.Flow.from_client_config
-            flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-                '../../secrets/client_secret.json',
-                scopes=['https://www.googleapis.com/auth/drive.metadata.readonly'])
+            print('Requesting auth from user...')
+            client_secret = Secrets.oauth_client_secret()
+            client_secret = json.loads(client_secret)
+            flow = google_auth_oauthlib.flow.Flow.from_client_config(
+                client_config=client_secret,
+                scopes=['https://www.googleapis.com/auth/drive.metadata.readonly']
+            )
 
-            flow.redirect_uri = 'dfdfdfdfdfr'
+            flow.redirect_uri = 'http://localhost:8080/oauth'
             authorization_url, state = flow.authorization_url(
                 login_hint="dsfsfsf@gmail.com",
                 access_type='offline',
@@ -39,10 +43,7 @@ def oauth_creator():
             )
             return flask.redirect(authorization_url)
 
-        # with open('token.pickle', 'wb') as f:
-        #     print('Saving Credentials file...')
-        #     pickle.dump(creds, f)
-
 
 if __name__ == '__main__':
+    Utils.set_local_environment()
     oauth_creator()

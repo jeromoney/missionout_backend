@@ -1,8 +1,10 @@
 import firebase_admin
 
+import Utils
 
-def setup_firebase_environment(local_environment=False):
-    if local_environment:
+
+def setup_firebase_environment():
+    if Utils.is_local_environment():
         import os
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/justin/PycharmProjects/secrets/firebase_credentials.json"
         os.environ["FIREBASE_CONFIG"] = "/Users/justin/PycharmProjects/secrets/firebase_credentials.json"
@@ -15,4 +17,5 @@ def setup_firebase_environment(local_environment=False):
 
 
 if __name__ == '__main__':
-    print(setup_firebase_environment(local_environment=True))
+    Utils.set_local_environment()
+    print(setup_firebase_environment())

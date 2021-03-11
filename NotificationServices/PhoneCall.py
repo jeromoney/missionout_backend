@@ -4,21 +4,16 @@ from urllib import parse
 from twilio.rest import Client
 
 import FirebaseSetup
+import Utils
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from NotificationServices.Twilio_Config import PURCHASED_PHONE_NUMBER, CALL_SCRIPT_URL
 from Data import MyMessage, Team
 from Secrets import twilio_secrets
 
 
-def make_phone_call(event: dict, team: Team, cloud_environment=True):
-    if cloud_environment:
-        account_sid, auth_token = twilio_secrets()
-    else:
-        from config import ACCOUNT_SID, AUTH_TOKEN  # This will break if run from cloud
-        account_sid, auth_token = ACCOUNT_SID, AUTH_TOKEN
-
+def make_phone_call(event: dict, team: Team):
+    account_sid, auth_token = twilio_secrets()
     voice_phone_numbers = team.get_voice_phone_numbers()
-
     message = MyMessage(event)
     need_for_action = parse.quote(message.needForAction)
     description = parse.quote(message.description)
@@ -40,8 +35,9 @@ def make_phone_call(event: dict, team: Team, cloud_environment=True):
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_environment(local_environment=True)
+    Utils.set_local_environment()
+    FirebaseSetup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)
-    print(make_phone_call(test_event, test_team, cloud_environment=False))
+    print(make_phone_call(test_event, test_team))

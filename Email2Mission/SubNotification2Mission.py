@@ -8,6 +8,7 @@ from firebase_admin import firestore
 # Classes must match definition from flutter client app
 import FirebaseSetup
 import Secrets
+import Utils
 from Email2Mission import EmailUtils
 
 
@@ -46,11 +47,8 @@ def get_latest_email():
     print(foo)
 
 
-def foo(local_environment=False):
-    if local_environment:
-        FirebaseSetup.setup_firebase_local_environment()
-    else:
-        FirebaseSetup.setup_firebase_environment()
+def foo():
+    FirebaseSetup.setup_firebase_environment()
     # Build Mission from incoming email
     mission = Mission()
     # Build Page from Mission
@@ -65,5 +63,6 @@ def foo(local_environment=False):
 
 
 if __name__ == '__main__':
+    Utils.set_local_environment()
     # foo(local_environment=True)
     get_latest_email()

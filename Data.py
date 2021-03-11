@@ -40,9 +40,9 @@ class User:
 
 
 class Team:
-    def __init__(self, teamID, editorsOnly):
+    def __init__(self, teamID, editors_only):
         self.teamID = teamID
-        self.editorsOnly = editorsOnly
+        self.editorsOnly = editors_only
         self.users = []
         self.db = firestore.client()
         self.__init_users()

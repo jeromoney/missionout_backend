@@ -31,6 +31,9 @@ def is_local_environment():
 def set_local_environment():
     os.environ["LOCAL_ENVIRONMENT"] = 'True'
     assert is_local_environment()
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    secret_manager_json = '/'.join([dir_path, "../secrets/secret_manager_credentials.json"])
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = secret_manager_json
 
 
 if __name__ == "__main__":

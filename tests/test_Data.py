@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
 
         user1 = User(snapshot_dict1)
         user2 = User(snapshot_dict2)
-        team = Team('chaffeecountysarnorth.org', message.onlyEditors)
+        team = Team('chaffeecountysarnorth.org', editors_only=False)
         team.add_user(user1)
         team.add_user(user2)
         self.assert_(user1 in team.users)

@@ -1,9 +1,9 @@
 from google.cloud import secretmanager
 import json
 import Utils
-import yaml
-config = yaml.safe_load(open("Config.yaml"))
-secrets_config = config.get('secrets')
+import Config
+
+secrets_config = Config.secrets_config()
 key_template = secrets_config.get('key_template')
 
 

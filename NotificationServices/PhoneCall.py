@@ -6,9 +6,10 @@ from twilio.rest import Client
 import FirebaseSetup
 import Utils
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from NotificationServices.Twilio_Config import PURCHASED_PHONE_NUMBER, CALL_SCRIPT_URL
 from Data import MyMessage, Team
 from Secrets import twilio_secrets
+import Config
+twilio_config = Config.twilio_config()
 
 
 def make_phone_call(event: dict, team: Team):
@@ -22,9 +23,9 @@ def make_phone_call(event: dict, team: Team):
     for number in voice_phone_numbers:
         call = client.calls.create(
             # URL is for static announcement
-            url=CALL_SCRIPT_URL.format(description, need_for_action),
+            url=twilio_config.get('call_script_url').format(description, need_for_action),
             to=number,
-            from_=PURCHASED_PHONE_NUMBER
+            from_=twilio_config.get('purchased_phone_number')
         )
         status_str = str(call.status)
         if status_str not in result.keys():

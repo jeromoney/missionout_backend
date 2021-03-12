@@ -1,18 +1,14 @@
-#
-# Send Text Messages
-#
 import time
 import FirebaseSetup
 import Utils
 from Secrets import twilio_secrets
-from NotificationServices.Twilio_Config import PURCHASED_PHONE_NUMBER
 from Data import MyMessage, Team
 import json
 from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
+import Config
 
-
-DELAY = 30  # Seconds
+twilio_config = Config.twilio_config()
 
 
 def send_text_message(event: dict, team: Team):
@@ -21,7 +17,7 @@ def send_text_message(event: dict, team: Team):
         Gives the FCM notifications a 30 second head start before being sent. The text message notification sound can overrun
          the louder FCM notification.
         """
-        time.sleep(DELAY)
+        time.sleep(twilio_config.get('text_delay'))
 
     account_sid, auth_token = twilio_secrets()
     client = Client(account_sid, auth_token)
@@ -34,7 +30,7 @@ def send_text_message(event: dict, team: Team):
         text_call = client.messages.create(
             body=body,
             to=number,
-            from_=PURCHASED_PHONE_NUMBER,
+            from_=twilio_config.get('purchased_phone_number'),
             status_callback=None,
         )
         status_str = str(text_call.status)

@@ -34,23 +34,22 @@ def get_oauth_token():
     return json.loads(_get_secret_value(oauth_token))
 
 
-def set_oauth_token(oauth_token):
-    secrets_config = Config.secrets_config()
+def _set_secret_value(key: str, value: str):
     client = secretmanager.SecretManagerServiceClient()
-
-    parent = client.secret_path('76139268481', 'oauth_token')
-
-    # Convert the string payload into a bytes. This step can be omitted if you
-    # pass in bytes instead of a str for the payload argument.
-    payload = oauth_token.encode("UTF-8")
-
-    # Add the secret version.
+    parent = client.secret_path(secrets_config.get('project_id'), key)
+    payload = value.encode("UTF-8")
     response = client.add_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
     )
-
-    # Print the new secret version name.
     print("Added secret version: {}".format(response.name))
+
+
+def set_oauth_token(oauth_token):
+    _set_secret_value(key='oauth_token', value=oauth_token)
+
+
+def set_oauth_state(oauth_state):
+    _set_secret_value(key='oauth_state', value=oauth_state)
 
 
 if __name__ == "__main__":
@@ -59,4 +58,3 @@ if __name__ == "__main__":
     print(get_mission_email())
     print(get_oauth_client_secret())
     print(get_oauth_token())
-    #set_oauth_token("foo_tr")

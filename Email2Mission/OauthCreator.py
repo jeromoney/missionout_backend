@@ -1,7 +1,9 @@
 import flask
 from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-import google_auth_oauthlib.flow
+from google_auth_oauthlib.flow import Flow
+import random
+from datetime import datetime
+import string
 
 import Secrets
 import Utils
@@ -11,6 +13,16 @@ from Email2Mission import EmailUtils
 Gathers Oauth credentials for user
 Output: Saves token.pickle with Oauth credentials
 """
+
+
+def _state_generator():
+    """generates a random string to ensure that only Google sends back tokens"""
+    random.seed(datetime.now())
+    letters = string.ascii_letters
+    state = ''.join(random.choice(letters) for i in range(20))
+    # store the state as a secret to later verify when Google returns a token
+    Secrets.set_oauth_state(state)
+    return state
 
 
 def oauth_creator():
@@ -27,18 +39,21 @@ def oauth_creator():
         else:
             print('Requesting auth from user...')
             client_secret = Secrets.get_oauth_client_secret()
-            flow = google_auth_oauthlib.flow.Flow.from_client_config(
+            state = _state_generator()
+            flow = Flow.from_client_config(
                 client_config=client_secret,
-                scopes=['https://www.googleapis.com/auth/drive.metadata.readonly']
+                scopes=['https://www.googleapis.com/auth/gmail.readonly'],
+                state=state
             )
 
             flow.redirect_uri = 'http://localhost:8080/oauth'
             authorization_url, state = flow.authorization_url(
-                login_hint="dsfsfsf@gmail.com",
+                login_hint=Secrets.get_mission_email(),
                 access_type='offline',
                 include_granted_scopes='true',
                 prompt='consent',
             )
+            print(authorization_url)
             return flask.redirect(authorization_url)
 
 

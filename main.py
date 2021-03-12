@@ -46,7 +46,6 @@ def oauth_creator(event: dict, _):
 
 
 if __name__ == "__main__":
-    import os
-    os.environ["LOCAL_ENVIRONMENT"] = 'True'
+    Utils.set_local_environment()
     test_event = json.loads(Utils.TEST_RESOURCE_STR)
     send_page(test_event, None)

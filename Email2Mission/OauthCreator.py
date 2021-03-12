@@ -26,7 +26,7 @@ def oauth_creator():
             creds.refresh(Request())
         else:
             print('Requesting auth from user...')
-            client_secret = Secrets.oauth_client_secret()
+            client_secret = Secrets.get_oauth_client_secret()
             flow = google_auth_oauthlib.flow.Flow.from_client_config(
                 client_config=client_secret,
                 scopes=['https://www.googleapis.com/auth/drive.metadata.readonly']
@@ -44,4 +44,5 @@ def oauth_creator():
 
 if __name__ == '__main__':
     Utils.set_local_environment()
-    oauth_creator()
+    foo = oauth_creator()
+    print(foo)

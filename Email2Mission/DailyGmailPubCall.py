@@ -18,9 +18,9 @@ def main():
         'labelIds': ['INBOX'],
         'topicName': TOPIC
     }
-    gmail.users().stop(userId=Secrets.mission_email()).execute()
+    gmail.users().stop(userId=Secrets.get_mission_email()).execute()
     return gmail.users().watch(
-        userId=Secrets.mission_email(),
+        userId=Secrets.get_mission_email(),
         body=request
     )\
         .execute()

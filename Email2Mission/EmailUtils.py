@@ -1,8 +1,8 @@
 import os
 import pickle
-
 from googleapiclient.discovery import build
 
+import Secrets
 import Utils
 
 
@@ -17,6 +17,8 @@ def get_gmail_credentials():
     EnvironmentError: why
 
     """
+    foo =Secrets.get_oauth_client_secret()
+
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     pickle_file = '/'.join([dir_path, 'token.pickle'])

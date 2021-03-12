@@ -1,7 +1,7 @@
 import time
 import FirebaseSetup
 import Utils
-from Secrets import twilio_secrets
+from Secrets import get_twilio_secrets
 from Data import MyMessage, Team
 import json
 from twilio.rest import Client
@@ -19,7 +19,7 @@ def send_text_message(event: dict, team: Team):
         """
         time.sleep(twilio_config.get('text_delay'))
 
-    account_sid, auth_token = twilio_secrets()
+    account_sid, auth_token = get_twilio_secrets()
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = MyMessage(event)

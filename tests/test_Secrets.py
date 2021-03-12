@@ -7,12 +7,14 @@ import Utils
 class SecretsTestCase(unittest.TestCase):
     def test_get_secrets(self):
         Utils.set_local_environment()
-        twilio_secrets = Secrets.twilio_secrets()
-        self.assertIsInstance(twilio_secrets, tuple)
-        oauth_secret = Secrets.oauth_client_secret()
-        self.assertIsInstance(oauth_secret, dict)
-        mission_email = Secrets.mission_email()
-        self.assertIn("@", mission_email)
+        result = Secrets.get_twilio_secrets()
+        self.assertIsInstance(result, tuple)
+        result = Secrets.get_oauth_client_secret()
+        self.assertIsInstance(result, dict)
+        result = Secrets.get_mission_email()
+        self.assertIn("@", result)
+        result = Secrets.get_oauth_token()
+        self.assertIsInstance(result, dict)
 
 
 if __name__ == '__main__':

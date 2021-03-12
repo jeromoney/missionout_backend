@@ -1,5 +1,4 @@
 import flask
-import json
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 import google_auth_oauthlib.flow
@@ -28,7 +27,6 @@ def oauth_creator():
         else:
             print('Requesting auth from user...')
             client_secret = Secrets.oauth_client_secret()
-            client_secret = json.loads(client_secret)
             flow = google_auth_oauthlib.flow.Flow.from_client_config(
                 client_config=client_secret,
                 scopes=['https://www.googleapis.com/auth/drive.metadata.readonly']

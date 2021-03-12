@@ -1,0 +1,7 @@
+# Location of secrets in google cloud
+secrets:
+  key_template: projects/76139268481/secrets/{key_name}/versions/latest
+  account_sid_key: twilio_ACCOUNT_SID
+  auth_token_key: twilio_AUTH_TOKEN
+  mission_email: MISSION_EMAIL
+  oauth_secret: email2missionOauth_client_secret

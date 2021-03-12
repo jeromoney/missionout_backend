@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 import string
 
-import Secrets
+from Secrets import get_secret_value, set_oauth_state
 import Utils
 from Email2Mission import EmailUtils
 
@@ -21,7 +21,7 @@ def _state_generator():
     letters = string.ascii_letters
     state = ''.join(random.choice(letters) for i in range(20))
     # store the state as a secret to later verify when Google returns a token
-    Secrets.set_oauth_state(state)
+    set_oauth_state(state)
     return state
 
 
@@ -38,7 +38,7 @@ def oauth_creator():
             creds.refresh(Request())
         else:
             print('Requesting auth from user...')
-            client_secret = Secrets.get_oauth_client_secret()
+            client_secret = get_secret_value('oauth_secret')
             state = _state_generator()
             flow = Flow.from_client_config(
                 client_config=client_secret,
@@ -48,7 +48,7 @@ def oauth_creator():
 
             flow.redirect_uri = 'http://localhost:8080/oauth'
             authorization_url, state = flow.authorization_url(
-                login_hint=Secrets.get_mission_email(),
+                login_hint=get_secret_value('mission_email'),
                 access_type='offline',
                 include_granted_scopes='true',
                 prompt='consent',

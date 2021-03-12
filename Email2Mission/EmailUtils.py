@@ -17,7 +17,7 @@ def get_gmail_credentials():
     EnvironmentError: why
 
     """
-    foo =Secrets.get_oauth_client_secret()
+    foo = Secrets.get_secret_value('oauth_state')
 
 
     dir_path = os.path.dirname(os.path.realpath(__file__))

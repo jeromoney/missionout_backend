@@ -1,7 +1,7 @@
 import time
 import FirebaseSetup
 import Utils
-from Secrets import get_twilio_secrets
+from Secrets import get_secret_value
 from Data import MyMessage, Team
 import json
 from twilio.rest import Client
@@ -18,8 +18,8 @@ def send_text_message(event: dict, team: Team):
          the louder FCM notification.
         """
         time.sleep(twilio_config.get('text_delay'))
-
-    account_sid, auth_token = get_twilio_secrets()
+    account_sid = get_secret_value('twilio_account_sid')
+    auth_token = get_secret_value('twilio_auth_token')
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = MyMessage(event)

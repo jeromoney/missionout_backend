@@ -1,11 +1,6 @@
 # Location of secrets in google cloud
 secrets:
   project_id: 76139268481
-  account_sid_key: twilio_ACCOUNT_SID
-  auth_token_key: twilio_AUTH_TOKEN
-  mission_email: MISSION_EMAIL
-  oauth_secret: email2missionOauth_client_secret
-  oauth_token: oauth_token
 
 twilio:
   purchased_phone_number: +14069241940

@@ -7,13 +7,14 @@ import FirebaseSetup
 import Utils
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
 from Data import MyMessage, Team
-from Secrets import get_twilio_secrets
+from Secrets import get_secret_value
 import Config
 twilio_config = Config.twilio_config()
 
 
 def make_phone_call(event: dict, team: Team):
-    account_sid, auth_token = get_twilio_secrets()
+    account_sid = get_secret_value('twilio_account_sid')
+    auth_token = get_secret_value('twilio_auth_token')
     voice_phone_numbers = team.get_voice_phone_numbers()
     message = MyMessage(event)
     need_for_action = parse.quote(message.needForAction)

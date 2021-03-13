@@ -8,3 +8,5 @@ venv/
 /scratch.py
 /email_2_mission_app/token.pickle
 /email_2_mission/notification_2_message.yaml
+*.pyc
+.DS_Store

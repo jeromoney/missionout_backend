@@ -8,7 +8,7 @@ from firebase_admin import firestore
 
 # Classes must match definition from flutter client app
 import firebase_setup
-import secrets
+import cloud_secrets
 import utils
 from email_2_mission_app import app_utils
 
@@ -41,7 +41,7 @@ PAGE_PATH = 'teams/{teamID}/missions/{missionID}/pages'
 def _get_latest_email(message_event: dict):
     """Returns most recent email in inbox"""
     emailAddress = message_event['emailAddress']
-    assert emailAddress == secrets.get_secret_value('mission_email')
+    assert emailAddress == cloud_secrets.get_secret_value('mission_email')
     historyId = message_event['historyId']
     gmail, _ = app_utils.get_gmail_credentials()
 

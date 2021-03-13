@@ -9,14 +9,13 @@ from google_auth_oauthlib.flow import Flow
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
-import secrets
 import utils
-from secrets import get_secret_value
+from cloud_secrets import get_secret_value
 import app_utils
 
 app = flask.Flask(__name__)
 utils.set_local_environment()  # Todo - remove before uploading
-app.secret_key = secrets.get_secret_value('flask_secret_key')
+app.secret_key = get_secret_value('flask_secret_key')
 
 
 @app.route('/')
@@ -27,7 +26,7 @@ def index():
 @app.route('/test')
 def test_api_request():
     gmail, credentials = app_utils.get_gmail_credentials()
-    files = gmail.users().messages().get(id='178193c81c9bd9b5', userId=secrets.get_secret_value('mission_email')).execute()
+    files = gmail.users().messages().get(id='178193c81c9bd9b5', userId=get_secret_value('mission_email')).execute()
 
     # Save credentials back to session in case access token was refreshed.
     # ACTION ITEM: In a production app, you likely want to save these
@@ -152,7 +151,7 @@ def print_index_table():
 
 if __name__ == '__main__':
     utils.set_local_environment()
-    app.secret_key = secrets.get_secret_value('flask_secret_key')
+    app.secret_key = get_secret_value('flask_secret_key')
 
     # When running locally, disable OAuthlib's HTTPs verification.
     # TODO ACTION ITEM for developers:

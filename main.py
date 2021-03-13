@@ -1,7 +1,6 @@
 # Entry way for google cloud functions.
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
-
 import delete_user_data
 import firebase_setup
 import user_setup

@@ -1,10 +1,9 @@
 import unittest
-
 import secrets
 import utils
 
 
-class SecretsTestCase(unittest.TestCase):
+class SecretsTest(unittest.TestCase):
     def test_get_secrets(self):
         utils.set_local_environment()
         result = secrets.get_twilio_secrets()

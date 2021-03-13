@@ -2,7 +2,7 @@ import google
 import googleapiclient.discovery
 
 import firebase_setup
-import secrets
+import cloud_secrets
 import utils
 import config
 
@@ -17,8 +17,8 @@ def daily_pub_request():
     Trigger: Called Daily
     Subscribes emailto push notifications for incoming emails
     """
-    email_address = secrets.get_secret_value('mission_email')
-    creds = secrets.get_secret_value('oauth_token')
+    email_address = cloud_secrets.get_secret_value('mission_email')
+    creds = cloud_secrets.get_secret_value('oauth_token')
     creds = google.oauth2.credentials.Credentials(
         **creds)
     gmail = googleapiclient.discovery.build(

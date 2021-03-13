@@ -8,10 +8,10 @@ import UserSetup
 import Utils
 
 from Data import Team, MyMessage
-from NotificationServices.TextMessage import send_text_message
-from NotificationServices.FCMNotification import send_fcm_notification
-from NotificationServices.PhoneCall import make_phone_call
-from NotificationServices.Email import send_email
+from notification_services.text_message import send_text_message
+from notification_services.fcm_notification import send_fcm_notification
+from notification_services.phone_call import make_phone_call
+from notification_services.email import send_email
 
 
 def send_page(event: dict, _):
@@ -39,10 +39,6 @@ def delete_user_data(event: dict, _):
     FirebaseSetup.setup_firebase_environment()
     DeleteUserData.delete_user_data(event)
 
-
-def oauth_creator(event: dict, _):
-    from Email2Mission import OauthCreator
-    OauthCreator.oauth_creator()
 
 
 if __name__ == "__main__":

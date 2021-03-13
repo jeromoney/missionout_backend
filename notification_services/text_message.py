@@ -6,9 +6,9 @@ from Data import MyMessage, Team
 import json
 from twilio.rest import Client
 from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-import Config
+import config
 
-twilio_config = Config.twilio_config()
+twilio_config = config.twilio_config()
 
 
 def send_text_message(event: dict, team: Team):

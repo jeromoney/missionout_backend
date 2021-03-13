@@ -5,9 +5,9 @@ import FirebaseSetup
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
-        from Email2Mission import DailyGmailPubCall
+        from email_2_mission import daily_pub_request
         FirebaseSetup.setup_firebase_environment()
-        results = DailyGmailPubCall.main()
+        results = daily_pub_request.daily_pub_request()
         # Should return something like {'historyId': '2904766', 'expiration': '1615913821664'}
         self.assertIn("historyId", results)
 

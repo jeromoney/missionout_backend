@@ -1,7 +1,9 @@
+import os
+
 from google.cloud import secretmanager
 import json
 import Utils
-import Config
+import config
 
 secret_keys = [
     'twilio_account_sid',
@@ -9,27 +11,34 @@ secret_keys = [
     'mission_email',
     'oauth_secret',
     'oauth_token',
-    'oauth_state'
+    'flask_secret_key',
 ]
 
 
 def get_secret_value(key):
+    Utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = Config.secrets_config()
+    secrets_config = config.secrets_config()
     parent = client.secret_version_path(secrets_config.get('project_id'), key, 'latest')
     response = client.access_secret_version(name=parent)
     response = response.payload.data.decode('UTF-8')
+    assert isinstance(response, str)
     if response[0] == '{':
+        response = response.replace("'", '"')
         return json.loads(response)
     else:
         return response
 
 
-def _set_secret_value(key: str, value: str):
+def set_secret_value(key, value):
+    Utils.set_secret_manager_credentials()
+    assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = Config.secrets_config()
+    secrets_config = config.secrets_config()
     parent = client.secret_path(secrets_config.get('project_id'), key)
+    if isinstance(value, dict):
+        value = str(value)
     payload = value.encode("UTF-8")
     response = client.add_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
@@ -37,15 +46,7 @@ def _set_secret_value(key: str, value: str):
     print("Added secret version: {}".format(response.name))
 
 
-def set_oauth_token(oauth_token):
-    _set_secret_value(key='oauth_token', value=oauth_token)
-
-
-def set_oauth_state(oauth_state):
-    _set_secret_value(key='oauth_state', value=oauth_state)
-
-
 if __name__ == "__main__":
     Utils.set_local_environment()
-    for key in secret_keys:
-        print(get_secret_value(key))
+    for some_key in secret_keys:
+        print(get_secret_value(some_key))

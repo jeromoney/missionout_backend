@@ -1,12 +1,12 @@
 import unittest
-import Config
+import config
 
 
 class ConfigTestCase(unittest.TestCase):
     def test_config(self):
-        config = Config.twilio_config()
+        config = config.twilio_config()
         self.assertIsInstance(config, dict)
-        config = Config.secrets_config()
+        config = config.secrets_config()
         self.assertIsInstance(config, dict)
 
 

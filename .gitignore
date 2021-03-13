@@ -6,4 +6,5 @@ bin/
 lib/
 venv/
 /scratch.py
-/Email2Mission/token.pickle
+/email_2_mission_app/token.pickle
+/email_2_mission/notification_2_message.yaml

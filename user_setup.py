@@ -1,7 +1,7 @@
 # Flow: User authenticates on app and triggers an authentication on the backend.
 # Outcome: Firestore adds document to users collection with appropriate fields
 
-import FirebaseSetup
+import firebase_setup
 from firebase_admin import firestore
 
 
@@ -38,6 +38,6 @@ def user_setup(event: dict):
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_local_environment()
+    firebase_setup.setup_firebase_local_environment()
     test_event = {'providerData': [{'providerId': 'demoteam.com'}], 'uid': 'some uid', 'displayName': 'Joe Blow', 'email': 'joe.blow@chaffeecountysarnorth.org'}
     user_setup(test_event)

@@ -3,8 +3,8 @@ import googleapiclient
 from googleapiclient.discovery import build
 from google.oauth2 import credentials
 
-import Secrets
-import Utils
+import secrets
+import utils
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 API_SERVICE_NAME = 'gmail'
@@ -19,7 +19,7 @@ def get_gmail_credentials():
     Credentials: Gmail API access object
 
     """
-    creds = Secrets.get_secret_value('oauth_token')
+    creds = secrets.get_secret_value('oauth_token')
     creds = google.oauth2.credentials.Credentials(
         **creds)
     return googleapiclient.discovery.build(
@@ -27,5 +27,5 @@ def get_gmail_credentials():
 
 
 if __name__ == '__main__':
-    Utils.set_local_environment()
+    utils.set_local_environment()
     print(get_gmail_credentials())

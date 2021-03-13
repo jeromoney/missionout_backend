@@ -3,11 +3,11 @@ from urllib import parse
 
 from twilio.rest import Client
 
-import FirebaseSetup
-import Utils
-from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from Data import MyMessage, Team
-from Secrets import get_secret_value
+import firebase_setup
+import utils
+from utils import TEST_RESOURCE_STR, get_teamID_from_event
+from data import MyMessage, Team
+from secrets import get_secret_value
 import config
 twilio_config = config.twilio_config()
 
@@ -37,8 +37,8 @@ def make_phone_call(event: dict, team: Team):
 
 
 if __name__ == '__main__':
-    Utils.set_local_environment()
-    FirebaseSetup.setup_firebase_environment()
+    utils.set_local_environment()
+    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

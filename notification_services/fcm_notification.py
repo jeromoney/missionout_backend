@@ -5,9 +5,9 @@ from google.cloud.firestore_v1 import WriteBatch
 from google.cloud.firestore_v1.client import Client
 from typing import List
 
-import FirebaseSetup
-from Utils import TEST_RESOURCE_STR, get_teamID_from_event
-from Data import MyMessage, Team, User
+import firebase_setup
+from utils import TEST_RESOURCE_STR, get_teamID_from_event
+from data import MyMessage, Team, User
 import json
 
 
@@ -103,7 +103,7 @@ def send_fcm_notification(event: dict, team: Team):
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_local_environment()
+    firebase_setup.setup_firebase_local_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     myTeam = Team(teamID, False)

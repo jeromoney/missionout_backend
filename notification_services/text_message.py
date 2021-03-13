@@ -1,18 +1,18 @@
 import time
-import FirebaseSetup
-import Utils
-from Secrets import get_secret_value
-from Data import MyMessage, Team
+import firebase_setup
+import utils
+from secrets import get_secret_value
+from data import MyMessage, Team
 import json
 from twilio.rest import Client
-from Utils import TEST_RESOURCE_STR, get_teamID_from_event
+from utils import TEST_RESOURCE_STR, get_teamID_from_event
 import config
 
 twilio_config = config.twilio_config()
 
 
 def send_text_message(event: dict, team: Team):
-    if not Utils.is_local_environment():
+    if not utils.is_local_environment():
         """
         Gives the FCM notifications a 30 second head start before being sent. The text message notification sound can overrun
          the louder FCM notification.
@@ -43,8 +43,8 @@ def send_text_message(event: dict, team: Team):
 
 
 if __name__ == '__main__':
-    Utils.set_local_environment()
-    FirebaseSetup.setup_firebase_environment()
+    utils.set_local_environment()
+    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

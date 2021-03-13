@@ -7,11 +7,10 @@ import json
 from firebase_admin import firestore
 
 # Classes must match definition from flutter client app
-import FirebaseSetup
-import Secrets
-import Utils
+import firebase_setup
+import secrets
+import utils
 from email_2_mission_app import app_utils
-
 
 
 class Mission:
@@ -42,7 +41,7 @@ PAGE_PATH = 'teams/{teamID}/missions/{missionID}/pages'
 def _get_latest_email(message_event: dict):
     """Returns most recent email in inbox"""
     emailAddress = message_event['emailAddress']
-    assert emailAddress == Secrets.get_secret_value('mission_email')
+    assert emailAddress == secrets.get_secret_value('mission_email')
     historyId = message_event['historyId']
     gmail, _ = app_utils.get_gmail_credentials()
 
@@ -77,7 +76,8 @@ def notification2message(event, context):
 if __name__ == '__main__':
     import yaml
     import os
+
     config_file = '/'.join([os.path.dirname(__file__), 'notification_2_message.yaml'])
     config = yaml.safe_load(open(config_file))
-    Utils.set_local_environment()
+    utils.set_local_environment()
     notification2message(config.get('message'), None)

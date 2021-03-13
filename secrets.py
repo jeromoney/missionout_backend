@@ -2,7 +2,7 @@ import os
 
 from google.cloud import secretmanager
 import json
-import Utils
+import utils
 import config
 
 secret_keys = [
@@ -16,7 +16,7 @@ secret_keys = [
 
 
 def get_secret_value(key):
-    Utils.set_secret_manager_credentials()
+    utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
     secrets_config = config.secrets_config()
@@ -32,7 +32,7 @@ def get_secret_value(key):
 
 
 def set_secret_value(key, value):
-    Utils.set_secret_manager_credentials()
+    utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
     secrets_config = config.secrets_config()
@@ -47,6 +47,6 @@ def set_secret_value(key, value):
 
 
 if __name__ == "__main__":
-    Utils.set_local_environment()
+    utils.set_local_environment()
     for some_key in secret_keys:
         print(get_secret_value(some_key))

@@ -6,3 +6,6 @@ twilio:
   purchased_phone_number: +14069241940
   call_script_url: https://handler.twilio.com/twiml/EH1dd19d1980e983d0ffbad12486659c20?description={}&needForAction={}
   text_delay: 30 # seconds. Used to give head start to cloud messages
+
+email_2_mission:
+  topic: projects/missionout/topics/new_mission

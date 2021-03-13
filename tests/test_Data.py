@@ -1,7 +1,7 @@
 import unittest
 
-from Data import User
-from Data import Team
+from data import User
+from data import Team
 
 
 class MyTestCase(unittest.TestCase):

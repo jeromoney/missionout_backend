@@ -1,6 +1,6 @@
 import unittest
 import json
-from Utils import get_teamID_from_event, TEST_RESOURCE_STR
+from utils import get_teamID_from_event, TEST_RESOURCE_STR
 
 ERROR_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": \"2020-02-20T22:08:29.494223Z\", ' \
                         '\"fields\": {\"needForAction\": {\"stringValue\": \"we need kisses for the puppy\"}, \"address\": {' \

@@ -3,7 +3,7 @@
 # Flow: User authenticates on app and triggers an authentication on the backend.
 # Outcome: Firestore deletes user's data
 
-import FirebaseSetup
+import firebase_setup
 from firebase_admin import firestore
 
 
@@ -14,7 +14,7 @@ def delete_user_data(event: dict):
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_local_environment()
+    firebase_setup.setup_firebase_local_environment()
     test_event = {"email": "me@example.com",
                   "metadata": {
                       "createdAt": "2018-10-19T19:29:16Z"

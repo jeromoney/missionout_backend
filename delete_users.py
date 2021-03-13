@@ -1,4 +1,4 @@
-import FirebaseSetup
+import firebase_setup
 from firebase_admin import auth
 import re
 
@@ -26,7 +26,7 @@ def get_email_users():
 
 
 if __name__ == '__main__':
-    FirebaseSetup.setup_firebase_local_environment()
+    firebase_setup.setup_firebase_local_environment()
     anonymous_users = get_anonymous_users()
     # for user in anonymous_users:
     #    auth.delete_user(user.uid)

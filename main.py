@@ -2,12 +2,12 @@
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
 
-import DeleteUserData
-import FirebaseSetup
-import UserSetup
-import Utils
+import delete_user_data
+import firebase_setup
+import user_setup
+import utils
 
-from Data import Team, MyMessage
+from data import Team, MyMessage
 from notification_services.text_message import send_text_message
 from notification_services.fcm_notification import send_fcm_notification
 from notification_services.phone_call import make_phone_call
@@ -15,8 +15,8 @@ from notification_services.email import send_email
 
 
 def send_page(event: dict, _):
-    FirebaseSetup.setup_firebase_environment()
-    teamID = Utils.get_teamID_from_event(event)
+    firebase_setup.setup_firebase_environment()
+    teamID = utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
     page_functions = [send_fcm_notification, make_phone_call, send_text_message, send_email]
@@ -31,17 +31,17 @@ def send_page(event: dict, _):
 
 
 def user_setup(event: dict, _):
-    FirebaseSetup.setup_firebase_environment()
-    UserSetup.user_setup(event)
+    firebase_setup.setup_firebase_environment()
+    user_setup.user_setup(event)
 
 
 def delete_user_data(event: dict, _):
-    FirebaseSetup.setup_firebase_environment()
-    DeleteUserData.delete_user_data(event)
+    firebase_setup.setup_firebase_environment()
+    delete_user_data.delete_user_data(event)
 
 
 
 if __name__ == "__main__":
-    Utils.set_local_environment()
-    test_event = json.loads(Utils.TEST_RESOURCE_STR)
+    utils.set_local_environment()
+    test_event = json.loads(utils.TEST_RESOURCE_STR)
     send_page(test_event, None)

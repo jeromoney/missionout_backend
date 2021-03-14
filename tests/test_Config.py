@@ -4,10 +4,10 @@ import config
 
 class ConfigTestCase(unittest.TestCase):
     def test_config(self):
-        config = config.twilio_config()
-        self.assertIsInstance(config, dict)
-        config = config.secrets_config()
-        self.assertIsInstance(config, dict)
+        myConfig = config.twilio_config()
+        self.assertIsInstance(myConfig, dict)
+        myConfig = config.secrets_config()
+        self.assertIsInstance(myConfig, dict)
 
 
 if __name__ == '__main__':

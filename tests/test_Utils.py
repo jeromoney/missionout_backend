@@ -15,7 +15,7 @@ class UtilsTest(unittest.TestCase):
     def test_get_teamID_from_event(self):
         test_event = json.loads(TEST_RESOURCE_STR)
         teamID = get_teamID_from_event(test_event)
-        self.assertTrue(teamID == 'chaffeecountysarnorth.org')
+        self.assertTrue(teamID == 'demoteam.com')
 
         test_event = json.loads(ERROR_RESOURCE_STR)
         #teamID = get_teamID_from_event(test_event) -- Raises an exception which is the expected behavior

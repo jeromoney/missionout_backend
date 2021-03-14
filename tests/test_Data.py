@@ -4,8 +4,13 @@ from data import User
 from data import Team
 
 
-class MyTestCase(unittest.TestCase):
+class DataTestCase(unittest.TestCase):
     def test_something(self):
+        import utils
+        utils.set_local_environment()
+        import firebase_setup
+        firebase_setup.setup_firebase_environment()
+
         snapshot_dict1 = {
             'voicePhoneNumber': '+17175559893',
             'mobilePhoneNumber': '+17175559893',
@@ -24,8 +29,7 @@ class MyTestCase(unittest.TestCase):
         team.add_user(user2)
         self.assert_(user1 in team.users)
         self.assert_(user2 in team.users)
-        self.assert_(user1.mobilePhoneNumber in team.get_mobile_phone_numbers())
-        self.assert_(user2.voicePhoneNumber in team.get_voice_phone_numbers())
+
 
 
 if __name__ == '__main__':

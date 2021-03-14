@@ -12,6 +12,21 @@ import cloud_secrets
 import utils
 from email_2_mission_app import app_utils
 
+EXAMPLE_EMAIL = '''
+CALL: CAR CRASH
+PLACE: Wendys
+ADDR: 123 HUCKLEBERRY LN
+CITY: BREMERTON
+ID: Some identifier for this alarm (123456) 
+PRI: Internal priority level (HIGH, A, 123, etc)
+DATE: CAD date (10/17/2012)
+TIME: CAD time 
+MAP: Map page or number: 123-456: Page 5, etc::
+UNIT: UNIT1, UNIT2, etc::
+INFO: Notes, data: other information
+'''
+PAGE_PATH = 'teams/{teamID}/missions/{missionID}/pages'
+
 
 class Mission:
     def __init__(self):
@@ -35,8 +50,17 @@ class Page:
         return
 
 
-PAGE_PATH = 'teams/{teamID}/missions/{missionID}/pages'
+def _parse_email(email: str):
+    """Converts email body of value pairs into dictionary 
 
+    Args:
+        email (str): email body in the Cadpage format
+    """
+    result = email.splitlines()
+    result = [line for line in result if ':' in line]
+    result = [line.split(':') for line in result]
+    # the fanciness with the join is in case the message has colons in it
+    return {line[0].strip(): ':'.join(line[1:]).strip() for line in result}
 
 def _get_latest_email(message_event: dict):
     """Returns most recent email in inbox"""
@@ -57,8 +81,8 @@ def _get_latest_email(message_event: dict):
 
 def notification2message(event, context):
     messageEvent = json.loads(base64.b64decode(event['data']))
-    _get_latest_email(messageEvent)
-
+    #_get_latest_email(messageEvent)
+    return _parse_email(EXAMPLE_EMAIL)
     # FirebaseSetup.setup_firebase_environment()
     # # Build Mission from incoming email
     # mission = Mission()
@@ -80,4 +104,4 @@ if __name__ == '__main__':
     config_file = '/'.join([os.path.dirname(__file__), 'notification_2_message.yaml'])
     config = yaml.safe_load(open(config_file))
     utils.set_local_environment()
-    notification2message(config.get('message'), None)
+    print(notification2message(config.get('message'), None))

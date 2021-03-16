@@ -12,3 +12,5 @@ venv/
 .DS_Store
 .vscode/launch.json
 .vscode/settings.json
+.vscode/.ropeproject/objectdb
+email_2_mission_app/.vscode/launch.json

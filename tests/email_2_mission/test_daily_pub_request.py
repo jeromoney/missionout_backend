@@ -1,6 +1,9 @@
 import unittest
+
+import sys
+sys.path.insert(0, '../..')
+print(sys.path)
 from firebase_setup import setup_firebase_environment
-import firebase_setup
 
 
 class DailyPubRequestTestCase(unittest.TestCase):

@@ -1,7 +1,7 @@
 import time
 import firebase_setup
 import utils
-from secrets import get_secret_value
+from cloud_secrets import get_secret_value
 from data import MyMessage, Team
 import json
 from twilio.rest import Client

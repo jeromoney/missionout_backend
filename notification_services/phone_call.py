@@ -7,7 +7,7 @@ import firebase_setup
 import utils
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 from data import MyMessage, Team
-from secrets import get_secret_value
+from cloud_secrets import get_secret_value
 import config
 twilio_config = config.twilio_config()
 

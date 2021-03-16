@@ -3,18 +3,17 @@
 import os
 import flask
 import requests
-
 import google.oauth2.credentials
 from google_auth_oauthlib.flow import Flow
+import sys
 
-# This OAuth 2.0 access scope allows for full read/write access to the
-# authenticated user's account and requires requests to use an SSL connection.
+sys.path.append('../')
 import utils
-from cloud_secrets import get_secret_value
+from cloud_secrets import get_secret_value, set_secret_value
 import app_utils
 
 app = flask.Flask(__name__)
-utils.set_local_environment()  # Todo - remove before uploading
+utils.set_local_environment()  # TODO - remove before uploading
 app.secret_key = get_secret_value('flask_secret_key')
 
 
@@ -26,10 +25,10 @@ def index():
 @app.route('/test')
 def test_api_request():
     gmail, credentials = app_utils.get_gmail_credentials()
-    files = gmail.users().messages().get(id='178193c81c9bd9b5', userId=get_secret_value('mission_email')).execute()
+    labels =gmail.users().labels().list(userId=get_secret_value('mission_email')).execute()
 
     # Save credentials back to session in case access token was refreshed.
-    # ACTION ITEM: In a production app, you likely want to save these
+    # TODO: In a production app, you likely want to save these
     #              credentials in a persistent database instead.
     flask.session['credentials'] = credentials_to_dict(credentials)
 
@@ -84,8 +83,12 @@ def oauth2callback():
 
     # Store credentials in the session.
     credentials = flow.credentials
-    flask.session['credentials'] = credentials_to_dict(credentials)
-    secrets.set_secret_value(key='oauth_token', value=flask.session['credentials'])
+    credentials = credentials_to_dict(credentials) 
+    if credentials.get('refresh_token') is None:
+        return "Missing refresh token. Remove MissionOut from your google account and try again"
+    flask.session['credentials'] = credentials
+    # TODO - allow only mission email in
+    set_secret_value(key='oauth_token', value=flask.session['credentials'])
     print("Saved credentials..")
     return flask.redirect(flask.url_for('test_api_request'))
 

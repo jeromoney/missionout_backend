@@ -1,10 +1,12 @@
+import sys
+sys.path.append('/Users/justin/Projects/missionout_backend')
+
 import google
 import googleapiclient
 from googleapiclient.discovery import build
 from google.oauth2 import credentials
 
 import cloud_secrets
-import app_utils
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 API_SERVICE_NAME = 'gmail'

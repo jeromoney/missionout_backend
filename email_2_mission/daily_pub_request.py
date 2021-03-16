@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/Users/justin/Projects/missionout_backend')
+
 import google
 import googleapiclient.discovery
 
@@ -25,7 +28,7 @@ def daily_pub_request():
         API_SERVICE_NAME, API_VERSION, credentials=creds)
 
     request = {
-        'labelIds': ['INBOX'],
+        'labelIds': [config.email_2_mission_config()['labelId']],  # Label is 
         'topicName': config.email_2_mission_config()['topic']
     }
     gmail.users().stop(userId=email_address).execute()

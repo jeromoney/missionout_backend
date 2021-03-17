@@ -3,6 +3,7 @@
 twilio==6.53.0
 google-api-python-client~=1.12.8
 google~=3.0.0
+firebase_admin=4.5.2
 
 requests~=2.23.0
 PyYAML~=5.4.1

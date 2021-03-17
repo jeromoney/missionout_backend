@@ -8,14 +8,12 @@ import random
 import string
 from firebase_admin import firestore
 
-import sys
-sys.path.append('/Users/justin/Projects/missionout_backend')
 
 import firebase_setup
 import cloud_secrets
 import cloud_config
 from email2mission_app.app_utils import get_gmail_credentials
-import cadpage2dict
+import email2mission.cadpage2dict
 
 
 
@@ -86,7 +84,7 @@ def _get_email_body(email_data: dict):
 def notification2mission(event, _):
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)
-    email_dict = cadpage2dict.parse_email(email_text)
+    email_dict = email2mission.cadpage2dict.parse_email(email_text)
     firebase_setup.setup_firebase_environment()
     # Build Mission from incoming email
     mission = Mission(email_dict)

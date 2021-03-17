@@ -83,7 +83,7 @@ def _get_email_body(email_data: dict):
     return  base64.b64decode(email_text).decode('UTF-8')
 
 
-def notification2message(event, _):
+def notification2mission(event, _):
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)
     email_dict = cadpage2dict.parse_email(email_text)
@@ -108,4 +108,4 @@ if __name__ == '__main__':
     import utils
     utils.set_local_environment()
     event= {'@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage', 'attributes': None, 'data': 'eyJlbWFpbEFkZHJlc3MiOiJtaXNzaW9uQGNoYWZmZWVjb3VudHlzYXJub3J0aC5vcmciLCJoaXN0b3J5SWQiOjQxMDkwfQ=='} 
-    print(notification2message(event, None))
+    print(notification2mission(event, None))

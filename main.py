@@ -14,7 +14,7 @@ from notification_services.email import send_email
 
 
 def send_page(event: dict, _):
-    firebase_setup.setup_firebase_environment()
+    firebase_setup.setup_firebase_environment() #TODO - add firebase setup to individual functions
     teamID = utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
@@ -37,6 +37,16 @@ def user_setup(event: dict, _):
 def delete_user_data(event: dict, _):
     firebase_setup.setup_firebase_environment()
     delete_user_data.delete_user_data(event)
+
+
+def main_dailypubrequest(_,__):
+    import email2mission.dailypubrequest
+    print(email2mission.dailypubrequest.dailypubrequest())
+
+
+def main_notification2mission(event: dict, _):
+    import email2mission.notification2mission
+    print(email2mission.dailypubrequest.notification2mission(dict, _))
 
 
 if __name__ == "__main__":

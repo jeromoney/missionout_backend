@@ -19,6 +19,7 @@ def dailypubrequest():
     Trigger: Called Daily
     Subscribes emailto push notifications for incoming emails
     """
+    firebase_setup.setup_firebase_environment()
     email_address = cloud_secrets.get_secret_value('mission_email')
     creds = cloud_secrets.get_secret_value('oauth_token')
     creds = google.oauth2.credentials.Credentials(
@@ -40,5 +41,4 @@ def dailypubrequest():
 if __name__ == '__main__':
     import utils
     utils.set_local_environment()
-    firebase_setup.setup_firebase_environment()
     print(dailypubrequest())

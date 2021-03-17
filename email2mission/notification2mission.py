@@ -16,7 +16,6 @@ from email2mission_app.app_utils import get_gmail_credentials
 import email2mission.cadpage2dict
 
 
-
 # Classes must match definition from flutter client app
 class Mission:
     def __init__(self, email_dict: dict):
@@ -43,7 +42,7 @@ class Page:
 
     def doc_path(self):
         return f'{self.missionDocumentPath}/pages'
-    
+   
 
 def _get_random_id():
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(20))
@@ -62,7 +61,7 @@ def _get_latest_email(event: dict):
         userId=emailAddress,
         startHistoryId=historyId,
         maxResults=1,
-        labelId =cloud_config.email_2_mission_config()['labelId'],
+        labelId=cloud_config.email_2_mission_config()['labelId'],
     ).execute()
     messageId = myHistory['history'][0]['messages'][0]['id']
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()
@@ -82,6 +81,7 @@ def _get_email_body(email_data: dict):
 
 
 def notification2mission(event, _):
+    print(f'my type is: {type(event)}')
     print(f'hello: {event.keys()}')
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)

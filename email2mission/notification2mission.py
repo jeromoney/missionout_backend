@@ -52,7 +52,9 @@ def _get_latest_email(event: dict):
     """Returns most recent email in inbox"""
     message_event = json.loads(base64.b64decode(event['data']))
     emailAddress = message_event['emailAddress']
-    assert emailAddress == cloud_secrets.get_secret_value('mission_email')
+    secret_email = cloud_secrets.get_secret_value('mission_email')
+    if emailAddress == secret_email:
+        raise EnvironmentError(f"Email address in message {emailAddress} does not match secret: {secret_email}")
     historyId = message_event['historyId']
     gmail, _ = get_gmail_credentials()
 

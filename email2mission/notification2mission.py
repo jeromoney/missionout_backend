@@ -82,7 +82,7 @@ def _get_email_body(email_data: dict):
 
 
 def notification2mission(event, _):
-    print(event)
+    print(f'hello: {event.keys()}')
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)
     email_dict = email2mission.cadpage2dict.parse_email(email_text)

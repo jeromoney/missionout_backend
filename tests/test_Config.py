@@ -2,15 +2,15 @@
 import sys
 sys.path.append('/Users/justin/Projects/missionout_backend')
 import unittest
-import config
+import cloud_config
 
 
-class ConfigTestCase(unittest.TestCase):
+class Cloud_configTestCase(unittest.TestCase):
     def test_config(self):
         sys.path.append('/Users/justin/Projects/missionout_backend')
-        myConfig = config.twilio_config()
+        myConfig =cloud_config.twilio_config()
         self.assertIsInstance(myConfig, dict)
-        myConfig = config.secrets_config()
+        myConfig =cloud_config.secrets_config()
         self.assertIsInstance(myConfig, dict)
 
 

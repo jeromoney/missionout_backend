@@ -6,7 +6,7 @@ import googleapiclient.discovery
 
 import firebase_setup
 import cloud_secrets
-import config
+import cloud_config
 
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
@@ -28,8 +28,8 @@ def dailypubrequest():
         API_SERVICE_NAME, API_VERSION, credentials=creds)
 
     request = {
-        'labelIds': [config.email_2_mission_config()['labelId']],  # Label is 
-        'topicName': config.email_2_mission_config()['topic']
+        'labelIds': [cloud_config.email_2_mission_config()['labelId']], 
+        'topicName': cloud_config.email_2_mission_config()['topic']
     }
     gmail.users().stop(userId=email_address).execute()
     return gmail.users().watch(

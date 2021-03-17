@@ -1,9 +1,7 @@
-import os
-
 from google.cloud import secretmanager
 import json
 import utils
-import config
+import cloud_config
 
 secret_keys = [
     'twilio_account_sid',
@@ -19,7 +17,7 @@ def get_secret_value(key):
     utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = config.secrets_config()
+    secrets_config =cloud_config.secrets_config()
     parent = client.secret_version_path(secrets_config.get('project_id'), key, 'latest')
     response = client.access_secret_version(name=parent)
     response = response.payload.data.decode('UTF-8')
@@ -35,7 +33,7 @@ def set_secret_value(key, value):
     utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = config.secrets_config()
+    secrets_config =cloud_config.secrets_config()
     parent = client.secret_path(secrets_config.get('project_id'), key)
     if isinstance(value, dict):
         value = str(value)

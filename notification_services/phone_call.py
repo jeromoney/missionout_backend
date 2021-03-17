@@ -8,8 +8,8 @@ import utils
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 from data import MyMessage, Team
 from cloud_secrets import get_secret_value
-import config
-twilio_config = config.twilio_config()
+import cloud_config
+twilio_config =cloud_config.twilio_config()
 
 
 def make_phone_call(event: dict, team: Team):

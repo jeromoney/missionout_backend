@@ -13,7 +13,7 @@ sys.path.append('/Users/justin/Projects/missionout_backend')
 
 import firebase_setup
 import cloud_secrets
-import config
+import cloud_config
 from email2mission_app.app_utils import get_gmail_credentials
 import cadpage2dict
 
@@ -64,7 +64,7 @@ def _get_latest_email(event: dict):
         userId=emailAddress,
         startHistoryId=historyId,
         maxResults=1,
-        labelId = config.email_2_mission_config()['labelId'],
+        labelId =cloud_config.email_2_mission_config()['labelId'],
     ).execute()
     messageId = myHistory['history'][0]['messages'][0]['id']
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()

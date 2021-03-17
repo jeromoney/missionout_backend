@@ -15,3 +15,4 @@ venv/
 .vscode/.ropeproject/objectdb
 email_2_mission_app/.vscode/launch.json
 email2mission_app/.vscode/launch.json
+.coverage

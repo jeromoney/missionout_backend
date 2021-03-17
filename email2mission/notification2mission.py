@@ -14,8 +14,8 @@ sys.path.append('/Users/justin/Projects/missionout_backend')
 import firebase_setup
 import cloud_secrets
 import config
-from email_2_mission_app.app_utils import get_gmail_credentials
-import cadpage_2_dict
+from email2mission_app.app_utils import get_gmail_credentials
+import cadpage2dict
 
 
 
@@ -43,11 +43,9 @@ class Page:
         self.onlyEditors = True  # Missions initiated by email only go to the Incident Command team
         self.time = firestore.SERVER_TIMESTAMP
 
-
     def doc_path(self):
         return f'{self.missionDocumentPath}/pages'
     
-
 
 def _get_random_id():
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits + string.ascii_lowercase) for _ in range(20))
@@ -71,6 +69,7 @@ def _get_latest_email(event: dict):
     messageId = myHistory['history'][0]['messages'][0]['id']
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()
 
+
 def _get_email_body(email_data: dict):
     """Digs through the email and returns the body as plaintext
 
@@ -83,10 +82,11 @@ def _get_email_body(email_data: dict):
     email_text = email_data['payload']['parts'][0]['body']['data']
     return  base64.b64decode(email_text).decode('UTF-8')
 
+
 def notification2message(event, _):
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)
-    email_dict = cadpage_2_dict.parse_email(email_text)
+    email_dict = cadpage2dict.parse_email(email_text)
     firebase_setup.setup_firebase_environment()
     # Build Mission from incoming email
     mission = Mission(email_dict)
@@ -94,12 +94,12 @@ def notification2message(event, _):
 
     db = firestore.client()
     db.collection(mission.doc_path())\
-    .document(mission.ID)\
-    .set(mission.__dict__)
+        .document(mission.ID)\
+        .set(mission.__dict__)
 
     db.collection(page.doc_path())\
-    .document()\
-    .set(page.__dict__)
+        .document()\
+        .set(page.__dict__)
 
 
 if __name__ == '__main__':

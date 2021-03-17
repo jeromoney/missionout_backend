@@ -26,7 +26,9 @@ def get_email_users():
 
 
 if __name__ == '__main__':
-    firebase_setup.setup_firebase_local_environment()
+    import utils
+    utils.set_local_environment()
+    firebase_setup.setup_firebase_environment()
     anonymous_users = get_anonymous_users()
     # for user in anonymous_users:
     #    auth.delete_user(user.uid)

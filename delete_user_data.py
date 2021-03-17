@@ -14,7 +14,9 @@ def delete_user_data(event: dict):
 
 
 if __name__ == '__main__':
-    firebase_setup.setup_firebase_local_environment()
+    import utils
+    utils.set_local_environment()
+    firebase_setup.setup_firebase_environment()
     test_event = {"email": "me@example.com",
                   "metadata": {
                       "createdAt": "2018-10-19T19:29:16Z"

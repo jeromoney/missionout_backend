@@ -39,7 +39,6 @@ def delete_user_data(event: dict, _):
     delete_user_data.delete_user_data(event)
 
 
-
 if __name__ == "__main__":
     utils.set_local_environment()
     test_event = json.loads(utils.TEST_RESOURCE_STR)

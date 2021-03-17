@@ -1,20 +1,8 @@
-EXAMPLE_EMAIL = '''
-                CALL: CAR CRASH
-                PLACE: Wendys
-                ADDR: 123 HUCKLEBERRY LN
-                CITY: BREMERTON
-                ID: Some identifier for this alarm (123456) 
-                PRI: Internal priority level (HIGH, A, 123, etc)
-                DATE: CAD date (10/17/2012)
-                TIME: CAD time 
-                MAP: Map page or number: 123-456: Page 5, etc::
-                UNIT: UNIT1, UNIT2, etc::
-                INFO: Notes, data: other information
-                '''
+
 REQUIRED_KEYS = {'CALL', 'PLACE', 'ADDR', 'CITY', 'INFO'}
 
 def parse_email(email: str):
-    """Converts email body of value pairs into dictionary 
+    """Converts email body of value pairs into dictionary
 
     Args:
         email (str): email body in the Cadpage format
@@ -28,6 +16,3 @@ def parse_email(email: str):
     assert REQUIRED_KEYS.issubset(result.keys())
     return result
 
-
-if __name__ == "__main__":
-    print(parse_email(EXAMPLE_EMAIL))

@@ -47,6 +47,7 @@ def set_secret_value(key, value):
 
 
 if __name__ == "__main__":
+    import utils
     utils.set_local_environment()
     for some_key in secret_keys:
         print(get_secret_value(some_key))

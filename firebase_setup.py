@@ -14,8 +14,10 @@ def setup_firebase_environment():
         return app
     except ValueError as e:
         print(f"App is already initialized {e}")
+        return firebase_admin.get_app()
 
 
 if __name__ == '__main__':
+    import utils
     utils.set_local_environment()
     print(setup_firebase_environment())

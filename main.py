@@ -46,7 +46,7 @@ def main_dailypubrequest(_,__):
 
 def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
-    print(email2mission.dailypubrequest.notification2mission(dict, _))
+    print(email2mission.notification2mission.notification2mission(dict, _))
 
 
 if __name__ == "__main__":

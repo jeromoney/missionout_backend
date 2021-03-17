@@ -98,6 +98,7 @@ def notification2mission(event, _):
     db.collection(page.doc_path())\
         .document()\
         .set(page.__dict__)
+    return 'OK', 200
 
 
 if __name__ == '__main__':

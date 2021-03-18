@@ -8,7 +8,8 @@ from google.oauth2 import credentials
 
 import cloud_secrets
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
+'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email',  'openid']
 API_SERVICE_NAME = 'gmail'
 API_VERSION = 'v1'
 

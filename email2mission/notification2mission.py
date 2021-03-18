@@ -50,7 +50,9 @@ def _get_random_id():
 
 def _get_latest_email(event: dict):
     """Returns most recent email in inbox"""
-    message_event = json.loads(base64.b64decode(event['data']))
+    event_data = event['data']
+    data_b6encoded = base64.b64decode(event_data)
+    message_event = json.loads(data_b6encoded)
     emailAddress = message_event['emailAddress']
     secret_email = cloud_secrets.get_secret_value('mission_email')
     if emailAddress != secret_email:

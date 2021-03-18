@@ -16,3 +16,4 @@ venv/
 email_2_mission_app/.vscode/launch.json
 email2mission_app/.vscode/launch.json
 .coverage
+email2mission_app/.vscode/settings.json

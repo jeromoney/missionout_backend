@@ -53,7 +53,7 @@ def _get_latest_email(event: dict):
     message_event = json.loads(base64.b64decode(event['data']))
     emailAddress = message_event['emailAddress']
     secret_email = cloud_secrets.get_secret_value('mission_email')
-    if emailAddress == secret_email:
+    if emailAddress != secret_email:
         raise EnvironmentError(f"Email address in message {emailAddress} does not match secret: {secret_email}")
     historyId = message_event['historyId']
     gmail, _ = get_gmail_credentials()
@@ -108,5 +108,6 @@ if __name__ == '__main__':
     sys.path.append('/Users/justin/Projects/missionout_backend')
     import utils
     utils.set_local_environment()
-    event= {'@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage', 'attributes': None, 'data': 'eyJlbWFpbEFkZHJlc3MiOiJtaXNzaW9uQGNoYWZmZWVjb3VudHlzYXJub3J0aC5vcmciLCJoaXN0b3J5SWQiOjQxMDkwfQ=='} 
+    #event= {'@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage', 'attributes': None, 'data': 'eyJlbWFpbEFkZHJlc3MiOiJtaXNzaW9uQGNoYWZmZWVjb3VudHlzYXJub3J0aC5vcmciLCJoaXN0b3J5SWQiOjQxMDkwfQ=='} 
+    event = {'@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage', 'attributes': None, 'data': 'eyJlbWFpbEFkZHJlc3MiOiJtaXNzaW9uQGNoYWZmZWVjb3VudHlzYXJub3J0aC5vcmciLCJoaXN0b3J5SWQiOjQ2ODcyfQ=='} 
     print(notification2mission(event, None))

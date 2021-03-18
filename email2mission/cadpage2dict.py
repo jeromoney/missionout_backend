@@ -1,6 +1,7 @@
 
 REQUIRED_KEYS = {'CALL', 'PLACE', 'ADDR', 'CITY', 'INFO'}
 
+
 def parse_email(email: str):
     """Converts email body of value pairs into dictionary
 

@@ -53,6 +53,9 @@ def _get_latest_email(event: dict):
     event_data = event['data']
     data_b6encoded = base64.b64decode(event_data)
     message_event = json.loads(data_b6encoded)
+    # verify that the email is the missionout email address
+    # This is not cryptographically secure as it's just a base64 encoded value
+    # It just prevents an error a few lines down when trying to accesssing the gmail api
     emailAddress = message_event['emailAddress']
     secret_email = cloud_secrets.get_secret_value('mission_email')
     if emailAddress != secret_email:
@@ -64,6 +67,7 @@ def _get_latest_email(event: dict):
     myHistory = gmail.users().history().list(
         userId=emailAddress,
         startHistoryId=historyId,
+        historyTypes="messageAdded",
         maxResults=1,
         labelId=cloud_config.email_2_mission_config()['labelId'],
     ).execute()
@@ -88,9 +92,6 @@ def _get_email_body(email_data: dict):
 
 
 def notification2mission(event, _):
-    import time
-    time.sleep(3)
-
     print(f'My event is: {event}')
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)

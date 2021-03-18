@@ -65,6 +65,7 @@ def _get_latest_email(event: dict):
         maxResults=1,
         labelId=cloud_config.email_2_mission_config()['labelId'],
     ).execute()
+    print(f'my history is: {myHistory}')
     messageId = myHistory['history'][0]['messages'][0]['id']
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()
 

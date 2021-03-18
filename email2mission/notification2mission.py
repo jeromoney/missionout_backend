@@ -84,6 +84,9 @@ def _get_email_body(email_data: dict):
 
 
 def notification2mission(event, _):
+    import time
+    time.sleep(3)
+
     print(f'My event is: {event}')
     email_data = _get_latest_email(event)
     email_text = _get_email_body(email_data)

@@ -59,7 +59,7 @@ def _get_latest_email(event: dict):
     emailAddress = message_event['emailAddress']
     secret_email = cloud_secrets.get_secret_value('mission_email')
     if emailAddress != secret_email:
-        raise EnvironmentError(f"Email address in message {emailAddress} does not match secret: {secret_email}")
+        raise ArgumentError(f"Email address in message {emailAddress} does not match secret: {secret_email}")
     historyId = message_event['historyId']
     gmail, _ = get_gmail_credentials()
 
@@ -73,7 +73,7 @@ def _get_latest_email(event: dict):
     ).execute()
     print(f'my history is: {myHistory}')
     if 'history' not in myHistory.keys():
-        raise EnvironmentError("No emails retrieved")
+        raise ArgumentError("No emails in history")
     messageId = myHistory['history'][0]['messages'][0]['id']
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()
 
@@ -93,9 +93,14 @@ def _get_email_body(email_data: dict):
 
 def notification2mission(event, _):
     print(f'My event is: {event}')
-    email_data = _get_latest_email(event)
-    email_text = _get_email_body(email_data)
-    email_dict = email2mission.cadpage2dict.parse_email(email_text)
+    try:
+        email_data = _get_latest_email(event)
+        email_text = _get_email_body(email_data)
+        email_dict = email2mission.cadpage2dict.parse_email(email_text)
+    except ArgumentError as error:
+        print(error)
+        return 'OK', 200
+
     firebase_setup.setup_firebase_environment()
     # Build Mission from incoming email
     mission = Mission(email_dict)

@@ -29,8 +29,7 @@ def dailypubrequest():
         "topicName": cloud_config.email_2_mission_config()["topic"],
     }
     gmail.users().stop(userId=email_address).execute()
-    gmail.users().watch(userId=email_address, body=request).execute()
-    return "OK", 200
+    return gmail.users().watch(userId=email_address, body=request).execute()
 
 
 if __name__ == "__main__":

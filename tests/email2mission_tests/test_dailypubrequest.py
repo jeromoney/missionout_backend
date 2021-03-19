@@ -9,8 +9,9 @@ class DailyPubRequestTestCase(unittest.TestCase):
         import email2mission.dailypubrequest
         setup_firebase_environment()
         results = email2mission.dailypubrequest.dailypubrequest()
+        print(results)
         # Should return something like {'historyId': '2904766', 'expiration': '1615913821664'}
-        self.assertEqual(('OK', 200), results)
+        self.assertIn('expiration', results.keys())
 
 
 if __name__ == '__main__':

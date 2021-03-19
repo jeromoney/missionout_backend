@@ -1,5 +1,6 @@
 import sys
-sys.path.append('/Users/justin/Projects/missionout_backend')
+
+sys.path.append("/Users/justin/Projects/missionout_backend")
 import unittest
 import cloud_secrets
 import utils
@@ -13,5 +14,5 @@ class SecretsTest(unittest.TestCase):
             self.assertIsNotNone(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

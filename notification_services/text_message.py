@@ -8,7 +8,7 @@ from twilio.rest import Client
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 import cloud_config
 
-twilio_config =cloud_config.twilio_config()
+twilio_config = cloud_config.twilio_config()
 
 
 def send_text_message(event: dict, team: Team):
@@ -17,20 +17,20 @@ def send_text_message(event: dict, team: Team):
         Gives the FCM notifications a 30 second head start before being sent. The text message notification sound can overrun
          the louder FCM notification.
         """
-        time.sleep(twilio_config.get('text_delay'))
-    account_sid = get_secret_value('twilio_account_sid')
-    auth_token = get_secret_value('twilio_auth_token')
+        time.sleep(twilio_config.get("text_delay"))
+    account_sid = get_secret_value("twilio_account_sid")
+    auth_token = get_secret_value("twilio_auth_token")
     client = Client(account_sid, auth_token)
     mobile_phone_numbers = team.get_mobile_phone_numbers()
     message = MyMessage(event)
 
-    body = F"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"
+    body = f"{team.teamID} Mission. {message.description} {message.needForAction} {message.creator}"
     result = {}
     for number in mobile_phone_numbers:
         text_call = client.messages.create(
             body=body,
             to=number,
-            from_=twilio_config.get('purchased_phone_number'),
+            from_=twilio_config.get("purchased_phone_number"),
             status_callback=None,
         )
         status_str = str(text_call.status)
@@ -39,10 +39,10 @@ def send_text_message(event: dict, team: Team):
         else:
             result[status_str] += 1
 
-    return F"Text Message Status: {result}"
+    return f"Text Message Status: {result}"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     utils.set_local_environment()
     firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)

@@ -83,7 +83,7 @@ def _get_latest_email(event: dict):
         .list(
             userId=emailAddress,
             startHistoryId=historyId,
-            historyTypes="messageAdded",
+            historyTypes="labelAdded",
             maxResults=1,
             labelId=cloud_config.email_2_mission_config()["labelId"],
         )
@@ -91,7 +91,7 @@ def _get_latest_email(event: dict):
     )
     print(f"my history is: {myHistory}")
     if "history" not in myHistory.keys():
-        raise AssertionError("No emails in history")
+        raise EnvironmentError("No emails in history")
     messageId = myHistory["history"][0]["messages"][0]["id"]
     return gmail.users().messages().get(id=messageId, userId=emailAddress).execute()
 

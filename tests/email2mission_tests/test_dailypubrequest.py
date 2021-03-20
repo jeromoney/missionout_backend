@@ -4,7 +4,7 @@ import utils
 
 
 class DailyPubRequestTestCase(unittest.TestCase):
-    def test_smoke_test(self):
+    def test_smoketest(self):
         utils.set_local_environment()
         import email2mission.dailypubrequest
         setup_firebase_environment()

@@ -3,7 +3,6 @@ import sys
 sys.path.append("/Users/justin/Projects/missionout_backend")
 import os
 import unittest
-import cloud_config
 
 from email2mission_app.app_utils import get_gmail_credentials, LABELS, get_label_id
 

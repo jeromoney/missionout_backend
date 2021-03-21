@@ -46,8 +46,5 @@ def dailypubrequest():
 
 if __name__ == "__main__":
     import sys
-
     sys.path.append("/Users/justin/Projects/missionout_backend")
-    import utils
-
     print(dailypubrequest())

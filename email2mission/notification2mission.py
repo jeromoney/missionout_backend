@@ -2,7 +2,7 @@
 Trigger: Push notification from pub/sub topic
 Converts incoming push notification (triggered from email) and builds the appropriate document for Firestore
 """
-
+import os
 
 import email2mission.emailsyncer
 import email2mission.emailprocesser

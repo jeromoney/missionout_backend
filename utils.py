@@ -1,43 +1,40 @@
 import os
 
-TEST_RESOURCE_STR = '{\"oldValue\": {}, \"updateMask\": {}, \"value\": {\"createTime\": ' \
-                    '\"2020-02-20T22:08:29.494223Z\", ' \
-                    '\"fields\": {\"needForAction\": {\"stringValue\": \"we need kisses for the puppy\"}, ' \
-                    '\"missionDocumentPath\": {' \
-                    '\"stringValue\": \"/teams/demoteam.com/missions/wIdTaPhiEOB4VZmEd2e6\"}, \"creator\": {' \
-                    '\"stringValue\": \"Justin Matis\"}, ' \
-                    '\"description\": {\"stringValue\": \"A puppy got hurt\"}, \"time\": {\"timestampValue\": ' \
-                    '\"2020-02-20T22:08:29.415Z\"}, \"onlyEditors\": {\"booleanValue\": ' \
-                    'true}}, \"name\": \"projects/missionout/databases/(' \
-                    'default)/documents/teams/demoteam.com/missions/wLZ6aZy6pVRBJBCkZXeu/pages' \
-                    '/icGulF5jyDuqBMnyuD2I\", \"updateTime\": \"2020-02-20T22:08:29.494223Z\"}}'
+TEST_RESOURCE_STR = (
+    '{"oldValue": {}, "updateMask": {}, "value": {"createTime": '
+    '"2020-02-20T22:08:29.494223Z", '
+    '"fields": {"needForAction": {"stringValue": "we need kisses for the puppy"}, '
+    '"missionDocumentPath": {'
+    '"stringValue": "/teams/demoteam.com/missions/wIdTaPhiEOB4VZmEd2e6"}, "creator": {'
+    '"stringValue": "Justin Matis"}, '
+    '"description": {"stringValue": "A puppy got hurt"}, "time": {"timestampValue": '
+    '"2020-02-20T22:08:29.415Z"}, "onlyEditors": {"booleanValue": '
+    'true}}, "name": "projects/missionout/databases/('
+    "default)/documents/teams/demoteam.com/missions/wLZ6aZy6pVRBJBCkZXeu/pages"
+    '/icGulF5jyDuqBMnyuD2I", "updateTime": "2020-02-20T22:08:29.494223Z"}}'
+)
 
 
 def get_teamID_from_event(event):
     """Event is JSON values passed by Google Cloud Function. We dig through data to get the ID of the team"""
-    teamIDPath = event['value']['name'].split('/')
+    teamIDPath = event["value"]["name"].split("/")
     for i, word in enumerate(teamIDPath):
-        if word == 'teams':
+        if word == "teams":
             return teamIDPath[i + 1]
     else:  # if value is not found, this code is called
-        raise ValueError('expected to find teamID in path')
+        raise ValueError("expected to find teamID in path")
 
 
 def is_local_environment():
     result = os.getenv("LOCAL_ENVIRONMENT", default=False)
-    return result == 'True'
+    return result == "True"
 
 
-def set_secret_manager_credentials():
-    if is_local_environment():
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        secret_manager_json = '/'.join([dir_path, "../secrets/secret_manager_credentials.json"])
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = secret_manager_json
-
-
-def set_local_environment():
-    os.environ["LOCAL_ENVIRONMENT"] = 'True'
-    assert is_local_environment()
+def get_mission_email():
+    result = os.getenv("mission_email")
+    if result is None:
+        raise ValueError("mission_email environment variable is not set")
+    return result
 
 
 if __name__ == "__main__":
@@ -45,3 +42,4 @@ if __name__ == "__main__":
 
     test_event = json.loads(TEST_RESOURCE_STR)
     print(get_teamID_from_event(test_event))
+    print(get_mission_email())

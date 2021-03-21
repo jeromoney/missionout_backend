@@ -1,23 +1,14 @@
 import firebase_admin
 
-import utils
-
 
 def setup_firebase_environment():
-    if utils.is_local_environment():
-        import os
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/justin/Projects/secrets/firebase_credentials.json"
-        os.environ["FIREBASE_CONFIG"] = "/Users/justin/Projects/secrets/firebase_credentials.json"
-    try:
+    if not firebase_admin._apps:
         app = firebase_admin.initialize_app()
-        assert (type(app) is firebase_admin.App)
+        assert type(app) is firebase_admin.App
         return app
-    except ValueError as e:
-        print(f"App is already initialized {e}")
+    else:
         return firebase_admin.get_app()
 
 
-if __name__ == '__main__':
-    import utils
-    utils.set_local_environment()
+if __name__ == "__main__":
     print(setup_firebase_environment())

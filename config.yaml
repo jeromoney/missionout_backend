@@ -9,4 +9,3 @@ twilio:
 
 email_2_mission:
   topic: projects/missionout/topics/new_mission
-  labelId: Label_3904385370299332190 #  equates to the NewMission label

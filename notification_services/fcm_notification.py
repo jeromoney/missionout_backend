@@ -40,11 +40,13 @@ def __apns_config(user: User):
                 content_available=True,
                 sound=CriticalSound(
                     # wakey_wakey is a default option which should be installed on iOS devices
-                    name=user.iOSSound if user.iOSSound is not None else "wakey_wakey.m4a",
+                    name=user.iOSSound
+                    if user.iOSSound is not None
+                    else "wakey_wakey.m4a",
                     critical=user.enableIOSCriticalAlerts,
-                    volume=user.iOSCriticalAlertsVolume
+                    volume=user.iOSCriticalAlertsVolume,
                 ),
-                badge=1
+                badge=1,
             )
         )
     )
@@ -61,7 +63,7 @@ def __build_messages(user: User, data: MyMessage):
                     title=data.description,
                     body=data.needForAction,
                 ),
-                token=token
+                token=token,
             )
         )
     return user_messages
@@ -77,17 +79,19 @@ def __cleanup_tokens(responses: BatchResponse, tokens: List[__UserTokenPair]):
     uids = set([token.uid for token in bad_tokens])
     uid_pairs: List[__UserWithTokens] = []
     for uid in uids:
-        userWithTokens = __UserWithTokens(uid=uid, tokens=[token.token for token in bad_tokens if token.uid == uid])
+        userWithTokens = __UserWithTokens(
+            uid=uid, tokens=[token.token for token in bad_tokens if token.uid == uid]
+        )
         uid_pairs.append(userWithTokens)
     # delete all the tokens
     db = firestore.client()
-    assert (isinstance(db, Client))
+    assert isinstance(db, Client)
     batch = db.batch()
-    assert (isinstance(batch, WriteBatch))
+    assert isinstance(batch, WriteBatch)
     for uid_pair in uid_pairs:
-        assert (isinstance(uid_pair, __UserWithTokens))
-        doc_ref = db.collection(u'users').document(uid_pair.uid)
-        doc_ref.update({u'tokens': firestore.ArrayRemove(uid_pair.tokens)})
+        assert isinstance(uid_pair, __UserWithTokens)
+        doc_ref = db.collection("users").document(uid_pair.uid)
+        doc_ref.update({"tokens": firestore.ArrayRemove(uid_pair.tokens)})
 
 
 def send_fcm_notification(event: dict, team: Team):
@@ -102,8 +106,7 @@ def send_fcm_notification(event: dict, team: Team):
     return f"FCM: Sent {len(responses.responses)} messages with {responses.failure_count} failures"
 
 
-if __name__ == '__main__':
-    utils.set_local_environment()
+if __name__ == "__main__":
     firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)

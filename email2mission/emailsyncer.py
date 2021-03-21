@@ -1,13 +1,12 @@
 import base64
-import json
 import email
 from firebase_admin import firestore
 import hashlib
+import os
 
-import cloud_secrets
-import cloud_config
-from email2mission_app.app_utils import get_gmail_credentials
+from email2mission_app.app_utils import get_gmail_credentials, get_label_id
 import firebase_setup
+import utils
 
 
 def _set_historyId(historyId: str):
@@ -36,11 +35,8 @@ def _get_historyId():
     return str(contents.get("historyId"))
 
 
-def _get_latest_emails(event: dict):
+def _get_latest_emails():
     """Returns most recent message ids of email in inbox
-
-    Args:
-        event (dict): [description]
 
     Raises:
         EnvironmentError: Event is from another email address. Do not process
@@ -49,52 +45,47 @@ def _get_latest_emails(event: dict):
     Returns:
         (list[str]): list of email ids
     """
-    event_data = event["data"]
-    data_b6encoded = base64.b64decode(event_data)
-    message_event = json.loads(data_b6encoded)
-    # verify that the email is the missionout email address
-    # This is not cryptographically secure as it's just a base64 encoded value
-    # It just prevents an error a few lines down when trying to accesssing the gmail api
-    emailAddress = message_event["emailAddress"]
-    secret_email = cloud_secrets.get_secret_value("mission_email")
-    if emailAddress != secret_email:
-        raise EnvironmentError(
-            f"Email address in message {emailAddress} does not match secret: {secret_email}"
-        )
-
+    secret_email = os.environ["mission_email"]
     historyId = _get_historyId()
     gmail, _ = get_gmail_credentials()
 
-    # get history ID from push notification
-    myHistory = (
-        gmail.users()
-        .history()
-        .list(
-            userId=emailAddress,
-            startHistoryId=historyId,
-            historyTypes="messageAdded",
-            labelId=cloud_config.email_2_mission_config()["labelId"],
+    # allow while loop to execute on the first pass
+    nextPageToken = None
+    history_list = []
+    while nextPageToken is None or nextPageToken:
+        myHistory = (
+            gmail.users()
+            .history()
+            .list(
+                userId=secret_email,
+                startHistoryId=historyId,
+                historyTypes="messageAdded",
+                labelId=get_label_id("NewMission"),
+                pageToken=nextPageToken,
+            )
+            .execute()
         )
-        .execute()
-    )
-    new_historyId = myHistory["historyId"]
+        new_historyId = myHistory["historyId"]
+        history_list += myHistory.get("history", [])
+        nextPageToken = myHistory.get("nextPageToken", False)
+    if not utils.is_local_environment():
+        _set_historyId(new_historyId)
     if "history" not in myHistory.keys():
         # update to latest history
         print("No emails since last sync")
-        _set_historyId(new_historyId)
         return {}
-    histories = myHistory["history"]
     # extract just the messageId
     messagesAdded = [
         sub_history["message"]["id"]
-        for history in histories
+        for history in history_list
         for sub_history in history["messagesAdded"]
     ]
-    _set_historyId(new_historyId)
+    # For testing purposes, I don't want to ratchet up the historyId
+
     return set(messagesAdded)
 
 
-def _get_email(message: str):
+def _get_email(message_id: str):
     """Digs through the email and returns the body as plaintext
 
     Args:
@@ -107,7 +98,7 @@ def _get_email(message: str):
     message = (
         gmail.users()
         .messages()
-        .get(userId="mission@chaffeecountysarnorth.org", id=message, format="raw")
+        .get(userId=os.environ["mission_email"], id=message_id, format="raw")
         .execute()
     )
     email_str = base64.urlsafe_b64decode(message["raw"]).decode("utf-8")
@@ -115,9 +106,10 @@ def _get_email(message: str):
     email_obj = email.message_from_string(email_str, policy=email.policy.default)
     # store id has hashed object to make sure to process emails only once
     email_obj.id = hashlib.sha1(email_str.encode("utf-8")).hexdigest()
+    email_obj.message_id = message_id
     return email_obj
 
 
-def get_latest_messages(event: dict):
-    email_ids = _get_latest_emails(event)
+def get_latest_messages():
+    email_ids = _get_latest_emails()
     return [_get_email(email_id) for email_id in email_ids]

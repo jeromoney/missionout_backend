@@ -1,12 +1,10 @@
 from google.cloud import secretmanager
 import json
-import utils
 import cloud_config
 
 secret_keys = [
     "twilio_account_sid",
     "twilio_auth_token",
-    "mission_email",
     "oauth_secret",
     "oauth_token",
     "flask_secret_key",
@@ -14,7 +12,6 @@ secret_keys = [
 
 
 def get_secret_value(key):
-    utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
     secrets_config = cloud_config.secrets_config()
@@ -30,7 +27,6 @@ def get_secret_value(key):
 
 
 def set_secret_value(key, value):
-    utils.set_secret_manager_credentials()
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
     secrets_config = cloud_config.secrets_config()
@@ -45,8 +41,5 @@ def set_secret_value(key, value):
 
 
 if __name__ == "__main__":
-    import utils
-
-    utils.set_local_environment()
     for some_key in secret_keys:
         print(get_secret_value(some_key))

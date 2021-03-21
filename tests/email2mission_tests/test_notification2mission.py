@@ -9,7 +9,6 @@ import utils
 
 class Notification2MissionTestCase(unittest.TestCase):
     def test_smoke_test(self):
-        utils.set_local_environment()
         import email2mission.notification2mission
 
         setup_firebase_environment()

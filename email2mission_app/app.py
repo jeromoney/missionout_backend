@@ -25,9 +25,7 @@ def index():
 @app.route("/test")
 def test_api_request():
     gmail, credentials = app_utils.get_gmail_credentials()
-    labels = (
-        gmail.users().labels().list(userId=get_secret_value("mission_email")).execute()
-    )
+    labels = gmail.users().labels().list(userId=os.environ["mission_email"]).execute()
 
     # Save credentials back to session in case access token was refreshed.
     # TODO: In a production app, you likely want to save these
@@ -160,7 +158,6 @@ def print_index_table():
 
 
 if __name__ == "__main__":
-    utils.set_local_environment()
     app.secret_key = get_secret_value("flask_secret_key")
 
     # When running locally, disable OAuthlib's HTTPs verification.

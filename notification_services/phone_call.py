@@ -1,8 +1,6 @@
-import json
 from urllib import parse
 from twilio.rest import Client
 
-from utils import TEST_RESOURCE_STR, get_teamID_from_event
 from data import MyMessage, Team
 from cloud_secrets import get_secret_value
 import cloud_config
@@ -33,11 +31,4 @@ def make_phone_call(event: dict, team: Team):
             result[status_str] = 1
         else:
             result[status_str] += 1
-    return result
-
-
-if __name__ == "__main__":
-    test_event = json.loads(TEST_RESOURCE_STR)
-    teamID = get_teamID_from_event(test_event)
-    test_team = Team(teamID, False)
-    print(make_phone_call(test_event, test_team))
+    return f"Phone call result: {result}"

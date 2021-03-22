@@ -42,13 +42,11 @@ def delete_user_data(event: dict, _):
 
 def main_dailypubrequest(_, __):
     import email2mission.dailypubrequest
-
     print(email2mission.dailypubrequest.dailypubrequest())
 
 
 def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
-
     return email2mission.notification2mission.notification2mission(event, _)
 
 

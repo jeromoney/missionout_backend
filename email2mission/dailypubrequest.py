@@ -1,9 +1,9 @@
 import google
 import googleapiclient.discovery
-from firebase_admin import firestore
 import os
+from google.cloud import firestore
 
-import firebase_setup
+
 import cloud_secrets
 import cloud_config
 import email2mission_app.app_utils
@@ -18,9 +18,7 @@ def dailypubrequest():
     Trigger: Called Daily
     Subscribes emailto push notifications for incoming emails
     """
-    firebase_setup.setup_firebase_environment()
-    db = firestore.client()
-
+    db = firestore.Client()
     email_address = os.environ["mission_email"]
     creds = cloud_secrets.get_secret_value("oauth_token")
     creds = google.oauth2.credentials.Credentials(**creds)
@@ -35,7 +33,9 @@ def dailypubrequest():
     gmail.users().stop(userId=email_address).execute()
     result = gmail.users().watch(userId=email_address, body=request).execute()
     historyId = int(result["historyId"])
-    document_reference = db.collection("teams").document("demoteam.com")
+    document_reference = db.collection("teams").document(
+        "demoteam.com"
+    )  # TODO - remove hardcode
     contents = document_reference.get()
     old_historyId = contents.get("historyId")
     if old_historyId > historyId:
@@ -46,5 +46,6 @@ def dailypubrequest():
 
 if __name__ == "__main__":
     import sys
+
     sys.path.append("/Users/justin/Projects/missionout_backend")
     print(dailypubrequest())

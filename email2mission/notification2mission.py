@@ -23,24 +23,30 @@ def notification2mission(event, __):
         (tuple): Returns acknowledgement as "OK", 200
     """
 
-    def _label_message(message_id: str, label: str):
+    def _label_messages(message_ids: list, label: str):
+        if message_ids == []:
+            return
         request = {
-            "removeLabelIds": [get_label_id("NewMission")],
+            "ids": message_ids,
+            "removeLabelIds": [get_label_id("NewMission"), "INBOX"],
             "addLabelIds": [get_label_id(label)],
         }
-        gmail.users().messages().modify(
-            userId=os.environ["mission_email"], id=message_id, body=request
+        gmail.users().messages().batchModify(
+            userId=os.environ["mission_email"], body=request
         ).execute()
 
     messages = email2mission.emailsyncer.get_latest_messages()
     gmail, _ = get_gmail_credentials()
+    good_messages = []
+    bad_messages = []
     for message in messages:
         try:
             email2mission.emailprocesser.process_email(message)
             print(f"processed: {message['from']}")
-            _label_message(message_id=message.message_id, label="ProcessedMission")
+            good_messages.append(message.message_id)
         except ValueError as error:
             print(f"Error processing email: {error}")
-            _label_message(message_id=message.message_id, label="ErrorMission")
-
+            bad_messages.append(message.message_id)
+    _label_messages(message_ids=good_messages, label="ProcessedMission")
+    _label_messages(message_ids=bad_messages, label="ErrorMission")
     return "OK", 200

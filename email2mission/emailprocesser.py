@@ -52,5 +52,5 @@ def process_email(message: EmailMessage):
         db.collection(mission.doc_path()).document(mission.ID).create(vars(mission))
         db.collection(page.doc_path()).document(page.ID).create(vars(page))
     except AlreadyExists:
-        print("Document already exists. Duplicate message.")
+        print("Document already exists. Duplicate message. Skipping")
         return "OK", 200

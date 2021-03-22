@@ -22,9 +22,9 @@ class App_UtilsTestCase(unittest.TestCase):
         self.assertTrue(hardcoded_label_set.issubset(labels_set))
 
     def test_get_label(self):
-        self.assertEquals("Label_3904385370299332190", get_label_id("NewMission"))
-        self.assertEquals("Label_7412520538190107930", get_label_id("ErrorMission"))
-        self.assertEquals("Label_8585042744770510320", get_label_id("ProcessedMission"))
+        self.assertEqual("Label_3904385370299332190", get_label_id("NewMission"))
+        self.assertEqual("Label_7412520538190107930", get_label_id("ErrorMission"))
+        self.assertEqual("Label_8585042744770510320", get_label_id("ProcessedMission"))
 
 
 if __name__ == "__main__":

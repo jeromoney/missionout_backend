@@ -1,4 +1,7 @@
 import firebase_setup
+
+firebase_setup.setup_firebase_environment()
+
 from firebase_admin import auth
 import re
 
@@ -23,7 +26,7 @@ def get_google_test_users():
     return [
         user
         for user in list_users.users
-        if re.search("[a-z]*\.[0-9]{5}@gmail.com", user.email) is not None
+        if re.search("[a-z]*\.[0-9]{5}@gmail.com", user.email or "") is not None
     ]
 
 
@@ -38,7 +41,7 @@ def get_email_users():
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
+    print(get_google_test_users())
     anonymous_users = get_anonymous_users()
     # for user in anonymous_users:
     #    auth.delete_user(user.uid)

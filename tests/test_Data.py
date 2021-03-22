@@ -5,9 +5,6 @@ from data import Team
 
 class DataTestCase(unittest.TestCase):
     def test_something(self):
-        import firebase_setup
-
-        firebase_setup.setup_firebase_environment()
 
         snapshot_dict1 = {
             "voicePhoneNumber": "+17175559893",

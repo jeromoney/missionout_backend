@@ -1,11 +1,10 @@
 # Entry way for google cloud functions.
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
-import delete_user_data
-import firebase_setup
-import user_setup
-import utils
 
+import delete_user_data as my_delete_user_data
+import user_setup as my_user_setup
+import utils
 from data import Team, MyMessage
 from notification_services.text_message import send_text_message
 from notification_services.fcm_notification import send_fcm_notification
@@ -14,7 +13,6 @@ from notification_services.send_email import send_email
 
 
 def send_page(event: dict, _):
-    firebase_setup.setup_firebase_environment()  # TODO - add firebase setup to individual functions
     teamID = utils.get_teamID_from_event(event)
     message = MyMessage(event)
     team = Team(teamID, message.onlyEditors)
@@ -35,13 +33,11 @@ def send_page(event: dict, _):
 
 
 def user_setup(event: dict, _):
-    firebase_setup.setup_firebase_environment()
-    user_setup.user_setup(event)
+    my_user_setup.user_setup(event)
 
 
 def delete_user_data(event: dict, _):
-    firebase_setup.setup_firebase_environment()
-    delete_user_data.delete_user_data(event)
+    my_delete_user_data.delete_user_data(event)
 
 
 def main_dailypubrequest(_, __):

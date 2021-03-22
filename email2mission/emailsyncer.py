@@ -1,17 +1,15 @@
 import base64
 import email
-from firebase_admin import firestore
+from google.cloud import firestore
 import hashlib
 import os
 
 from email2mission_app.app_utils import get_gmail_credentials, get_label_id
-import firebase_setup
 import utils
 
 
 def _set_historyId(historyId: str):
-    firebase_setup.setup_firebase_environment()
-    db = firestore.client()
+    db = firestore.Client()
     historyIdInt = int(historyId)
     document_reference = db.collection("teams").document(
         "demoteam.com"
@@ -26,8 +24,7 @@ def _set_historyId(historyId: str):
 
 
 def _get_historyId():
-    firebase_setup.setup_firebase_environment()
-    db = firestore.client()
+    db = firestore.Client()
     document_reference = db.collection("teams").document(
         "demoteam.com"
     )  # TODO - fix hardcoding

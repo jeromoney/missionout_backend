@@ -1,7 +1,6 @@
 import json
-from firebase_admin import firestore
+from google.cloud import firestore
 
-import firebase_setup
 from data import Team, MyMessage
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 
@@ -22,7 +21,6 @@ def send_email(event: dict, team: Team):
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     team = Team(teamID, False)

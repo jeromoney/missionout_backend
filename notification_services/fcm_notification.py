@@ -3,9 +3,9 @@ from firebase_admin._messaging_utils import UnregisteredError
 from firebase_admin.messaging import CriticalSound, BatchResponse
 from google.cloud.firestore_v1 import WriteBatch
 from google.cloud.firestore_v1.client import Client
+from google.cloud import firestore
 from typing import List
 
-import firebase_setup
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 from data import MyMessage, Team, User
 import json
@@ -84,7 +84,7 @@ def __cleanup_tokens(responses: BatchResponse, tokens: List[__UserTokenPair]):
         )
         uid_pairs.append(userWithTokens)
     # delete all the tokens
-    db = firestore.client()
+    db = firestore.Client()
     assert isinstance(db, Client)
     batch = db.batch()
     assert isinstance(batch, WriteBatch)
@@ -107,7 +107,6 @@ def send_fcm_notification(event: dict, team: Team):
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     myTeam = Team(teamID, False)

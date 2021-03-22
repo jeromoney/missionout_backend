@@ -1,10 +1,10 @@
 import time
-import firebase_setup
+from twilio.rest import Client
+
 import utils
 from cloud_secrets import get_secret_value
 from data import MyMessage, Team
 import json
-from twilio.rest import Client
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 import cloud_config
 
@@ -43,7 +43,6 @@ def send_text_message(event: dict, team: Team):
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

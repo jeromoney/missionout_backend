@@ -1,12 +1,11 @@
 # Flow: User authenticates on app and triggers an authentication on the backend.
 # Outcome: Firestore adds document to users collection with appropriate fields
 
-import firebase_setup
-from firebase_admin import firestore
+from google.cloud import firestore
 
 
 def user_setup(event: dict):
-    db = firestore.client()
+    db = firestore.Client()
     email = event.get("email", None)
     # If a user signs in with a password, they don't need to prove they own their email, which creates a security risk.
     # Instead a DBA will need to manually approve email/password sign ins.
@@ -36,15 +35,14 @@ def user_setup(event: dict):
         "email": email,
         "dateCreated": firestore.SERVER_TIMESTAMP,
     }
-    db.collection("users").document(uid).set(user_info)
+    return db.collection("users").document(uid).set(user_info)
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
     test_event = {
         "providerData": [{"providerId": "demoteam.com"}],
         "uid": "some uid",
         "displayName": "Joe Blow",
         "email": "joe.blow@chaffeecountysarnorth.org",
     }
-    user_setup(test_event)
+    print(user_setup(test_event))

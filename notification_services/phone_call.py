@@ -1,9 +1,7 @@
 import json
 from urllib import parse
-
 from twilio.rest import Client
 
-import firebase_setup
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 from data import MyMessage, Team
 from cloud_secrets import get_secret_value
@@ -39,7 +37,6 @@ def make_phone_call(event: dict, team: Team):
 
 
 if __name__ == "__main__":
-    firebase_setup.setup_firebase_environment()
     test_event = json.loads(TEST_RESOURCE_STR)
     teamID = get_teamID_from_event(test_event)
     test_team = Team(teamID, False)

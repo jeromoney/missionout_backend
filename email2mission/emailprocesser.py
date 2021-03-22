@@ -1,8 +1,8 @@
 from email.message import EmailMessage
-from firebase_admin import firestore
 from google.api_core.exceptions import AlreadyExists
+from google.cloud import firestore
+
 import email2mission.cadpage2dict
-import firebase_setup
 
 
 class Mission:
@@ -46,8 +46,7 @@ def process_email(message: EmailMessage):
     # Build Mission from incoming email
     mission = Mission(email_dict=email_dict, id=message.id)
     page = Page(mission)
-    firebase_setup.setup_firebase_environment()
-    db = firestore.client()
+    db = firestore.Client()
 
     try:
         db.collection(mission.doc_path()).document(mission.ID).create(vars(mission))

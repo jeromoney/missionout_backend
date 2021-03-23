@@ -14,7 +14,7 @@ from notification_services.send_email import send_email
 # make sure environment variables are place
 from os import environ
 
-if environ.get("mission_emailadasdas") is None:
+if environ.get("mission_email") is None:
     raise ValueError("mission_email environment variable not set")
 
 

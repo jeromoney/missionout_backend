@@ -95,6 +95,9 @@ def __cleanup_tokens(responses: BatchResponse, tokens: List[__UserTokenPair]):
 
 
 def send_fcm_notification(event: dict, team: Team):
+    import firebase_setup
+
+    firebase_setup.setup_firebase_environment()
     messageData = MyMessage(event)
     messages: List[messaging.Message] = []
     tokens: List[__UserTokenPair] = []
@@ -104,10 +107,3 @@ def send_fcm_notification(event: dict, team: Team):
     responses = messaging.send_all(messages)
     __cleanup_tokens(responses, tokens)
     return f"FCM: Sent {len(responses.responses)} messages with {responses.failure_count} failures"
-
-
-if __name__ == "__main__":
-    test_event = json.loads(TEST_RESOURCE_STR)
-    teamID = get_teamID_from_event(test_event)
-    myTeam = Team(teamID, False)
-    print(send_fcm_notification(test_event, myTeam))

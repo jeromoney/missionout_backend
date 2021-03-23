@@ -11,6 +11,12 @@ from notification_services.fcm_notification import send_fcm_notification
 from notification_services.phone_call import make_phone_call
 from notification_services.send_email import send_email
 
+# make sure environment variables are place
+from os import environ
+
+if environ.get("mission_emailadasdas") is None:
+    raise ValueError("mission_email environment variable not set")
+
 
 def send_page(event: dict, _):
     teamID = utils.get_teamID_from_event(event)
@@ -42,11 +48,13 @@ def delete_user_data(event: dict, _):
 
 def main_dailypubrequest(_, __):
     import email2mission.dailypubrequest
+
     print(email2mission.dailypubrequest.dailypubrequest())
 
 
 def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
+
     return email2mission.notification2mission.notification2mission(event, _)
 
 

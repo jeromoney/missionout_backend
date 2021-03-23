@@ -36,13 +36,3 @@ def user_setup(event: dict):
         "dateCreated": firestore.SERVER_TIMESTAMP,
     }
     return db.collection("users").document(uid).set(user_info)
-
-
-if __name__ == "__main__":
-    test_event = {
-        "providerData": [{"providerId": "demoteam.com"}],
-        "uid": "some uid",
-        "displayName": "Joe Blow",
-        "email": "joe.blow@chaffeecountysarnorth.org",
-    }
-    print(user_setup(test_event))

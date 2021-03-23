@@ -7,28 +7,25 @@ import os
 from email2mission_app.app_utils import get_gmail_credentials, get_label_id
 import utils
 
+db = firestore.Client()
+MAIL_CONFIG_DOCUMENT = db.collection("email_config").document(
+    os.environ["mission_email"]
+)
+
 
 def _set_historyId(historyId: str):
-    db = firestore.Client()
     historyIdInt = int(historyId)
-    document_reference = db.collection("teams").document(
-        "demoteam.com"
-    )  # TODO - fix hardcoding
-    contents = document_reference.get()
+    contents = MAIL_CONFIG_DOCUMENT.get()
     old_historyId = contents.get("historyId")
     if old_historyId > historyIdInt:
         raise EnvironmentError(
             f"HistoryIds are out of sequence: {old_historyId} vs {historyIdInt}"
         )
-    document_reference.update({"historyId": (historyIdInt)})
+    MAIL_CONFIG_DOCUMENT.update({"historyId": (historyIdInt)})
 
 
 def _get_historyId():
-    db = firestore.Client()
-    document_reference = db.collection("teams").document(
-        "demoteam.com"
-    )  # TODO - fix hardcoding
-    contents = document_reference.get()
+    contents = MAIL_CONFIG_DOCUMENT.get()
     return str(contents.get("historyId"))
 
 
@@ -82,31 +79,43 @@ def _get_latest_emails():
     return set(messagesAdded)
 
 
-def _get_email(message_id: str):
-    """Digs through the email and returns the body as plaintext
-
-    Args:
-        message (str): email message id
-
-    Returns:
-        (Email): the email body as python email object
-    """
-    gmail, _ = get_gmail_credentials()
-    message = (
-        gmail.users()
-        .messages()
-        .get(userId=os.environ["mission_email"], id=message_id, format="raw")
-        .execute()
-    )
-    email_str = base64.urlsafe_b64decode(message["raw"]).decode("utf-8")
-    # policy.default accesses python3 features such as get_body
-    email_obj = email.message_from_string(email_str, policy=email.policy.default)
-    # store id has hashed object to make sure to process emails only once
-    email_obj.id = hashlib.sha1(email_str.encode("utf-8")).hexdigest()
-    email_obj.message_id = message_id
-    return email_obj
-
-
 def get_latest_messages():
+    """Returns all emails since last sync. If an error occurs, an error is returned
+    Returns:
+        (dict[str:EmailMessage,ValueError]) : message id is the key and the value is either an email or an error
+    """
+
+    def _get_email(message_id: str):
+        """Digs through the email and returns the body as plaintext
+
+        Args:
+            message (str): email message id
+
+        Returns:
+            (Email): the email body as python email object
+        """
+        gmail, _ = get_gmail_credentials()
+        message = (
+            gmail.users()
+            .messages()
+            .get(userId=os.environ["mission_email"], id=message_id, format="raw")
+            .execute()
+        )
+        email_str = base64.urlsafe_b64decode(message["raw"]).decode("utf-8")
+        # policy.default accesses python3 features such as get_body
+        email_obj = email.message_from_string(email_str, policy=email.policy.default)
+        # store id has hashed object to make sure to process emails only once
+        email_obj.id = hashlib.sha1(email_str.encode("utf-8")).hexdigest()
+        email_obj.message_id = message_id
+        # TODO - better validation
+        sender = email_obj["To"].split("@")[0]
+        if sender not in white_list:
+            email_obj.sender = None
+            return ValueError("Sender not in email white list")
+        email_obj.sender = sender
+        return email_obj
+
+    documents = db.collection("app_setup").get()
+    white_list = [doc.id for doc in documents]
     email_ids = _get_latest_emails()
-    return [_get_email(email_id) for email_id in email_ids]
+    return {email_id: _get_email(email_id) for email_id in email_ids}

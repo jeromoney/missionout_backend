@@ -1,3 +1,0 @@
-# Do not upload to github. Nothing really sensitive just my email address
-message: { '@type': 'type.googleapis.com/google.pubsub.v1.PubsubMessage', 'attributes': None,
-       'data': 'eyJlbWFpbEFkZHJlc3MiOiJqdXN0aW4ubWF0aXNAZ21haWwuY29tIiwiaGlzdG9yeUlkIjoyOTA4MjU0fQ==' }

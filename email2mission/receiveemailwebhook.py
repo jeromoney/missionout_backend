@@ -1,6 +1,3 @@
-from flask import Request
-
-
-def receiveEmailWebhook(request: Request):
+def receiveEmailWebhook(request):
     print(request)
     return str(request), 200

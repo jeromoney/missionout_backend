@@ -1,3 +1,6 @@
-def receiveEmailWebhook(event: dict):
-    print(event)
-    return str(event["data"]), 200
+from flask import Request
+
+
+def receiveEmailWebhook(request: Request):
+    print(request)
+    return str(request), 200

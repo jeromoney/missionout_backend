@@ -52,7 +52,7 @@ def main_dailypubrequest(_, __):
     print(email2mission.dailypubrequest.dailypubrequest())
 
 
-def receiveEmailWebhook(event: dict, _):
+def receiveEmailWebhook(event: dict):
     import email2mission.receiveemailwebhook
 
     email2mission.receiveemailwebhook.receiveEmailWebhook(event)
@@ -65,5 +65,6 @@ def main_notification2mission(event: dict, _):
 
 
 if __name__ == "__main__":
-    test_event = json.loads(utils.TEST_RESOURCE_STR)
-    send_page(test_event, None)
+    # test_event = json.loads(utils.TEST_RESOURCE_STR)
+    # send_page(test_event, None)
+    print(receiveEmailWebhook(None, None))

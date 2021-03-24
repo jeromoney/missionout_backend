@@ -1,7 +1,8 @@
 import sys
-import notification_services
 
 sys.path.append("/Users/justin/Projects/missionout_backend")
+import notification_services
+
 import notification_services.phone_call
 import unittest
 
@@ -19,6 +20,7 @@ class PhoneCallTestCase(unittest.TestCase):
 
         sys.path.append("/Users/justin/Projects/missionout_backend")
         from notification_services.phone_call import make_phone_call
+
         result = make_phone_call(test_event, test_team)
         self.assertIn("Phone call result:", result)
 

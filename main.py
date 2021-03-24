@@ -52,6 +52,12 @@ def main_dailypubrequest(_, __):
     print(email2mission.dailypubrequest.dailypubrequest())
 
 
+def receiveEmailWebhook(event: dict, _):
+    import email2mission.receiveemailwebhook
+
+    email2mission.receiveemailwebhook.receiveEmailWebhook(event)
+
+
 def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
 

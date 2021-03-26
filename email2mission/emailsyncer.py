@@ -21,6 +21,7 @@ def _label_messages(message_ids: list):
         "removeLabelIds": [get_label_id("NewMission"), "INBOX"],
         "addLabelIds": [get_label_id("ProcessedMission")],
     }
+    gmail, _ = get_gmail_credentials()
     gmail.users().messages().batchModify(
         userId=os.environ["mission_email"], body=request
     ).execute()

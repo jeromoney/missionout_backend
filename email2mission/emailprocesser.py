@@ -38,24 +38,15 @@ class Page:
         return f"{self.missionDocumentPath}/pages"
 
 
-def process_email(message: EmailMessage):
-    # i added some custom fields
-    assert message.sender is not None
-    assert message.id is not None
-    message_body = message.get_body(preferencelist=["plain"])
-    if message_body.get_default_type() != "text/plain":
-        raise ValueError(
-            f"Message body is not plain text: {message.get_default_type()}"
-        )
-    email_dict = email2mission.cadpage2dict.parse_email(message_body.get_payload())
-    # Build Mission from incoming email
-    mission = Mission(email_dict=email_dict, id=message.id, sender=message.sender)
-    page = Page(mission=mission, email=message)
+def process_emails(message_dict: dict):
     db = firestore.Client()
-
-    try:
-        db.collection(mission.doc_path()).document(mission.ID).create(vars(mission))
-        db.collection(page.doc_path()).document(page.ID).create(vars(page))
-    except AlreadyExists:
-        print("Document already exists. Duplicate message. Skipping")
-        return "OK", 200
+    foo = firestore.SERVER_TIMESTAMP
+    batch = db.batch()
+    for message_key in message_dict:
+        indvidual_dict = message_dict[message_key]
+        indvidual_dict["webhookTimestamp"] = firestore.SERVER_TIMESTAMP
+        indvidual_dict["webhookSource"] = "WebhookSender.GOOGLE"
+        message_ref = db.collection("webhook").document()
+        batch.set(message_ref, indvidual_dict)
+    # Commit the batch
+    batch.commit()

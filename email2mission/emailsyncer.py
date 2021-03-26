@@ -13,6 +13,19 @@ MAIL_CONFIG_DOCUMENT = db.collection("email_config").document(
 )
 
 
+def _label_messages(message_ids: list):
+    if message_ids == []:
+        return
+    request = {
+        "ids": message_ids,
+        "removeLabelIds": [get_label_id("NewMission"), "INBOX"],
+        "addLabelIds": [get_label_id("ProcessedMission")],
+    }
+    gmail.users().messages().batchModify(
+        userId=os.environ["mission_email"], body=request
+    ).execute()
+
+
 def _set_historyId(historyId: str):
     historyIdInt = int(historyId)
     contents = MAIL_CONFIG_DOCUMENT.get()
@@ -62,8 +75,7 @@ def _get_latest_emails():
         new_historyId = myHistory["historyId"]
         history_list += myHistory.get("history", [])
         nextPageToken = myHistory.get("nextPageToken", False)
-    if not utils.is_local_environment():
-        _set_historyId(new_historyId)
+
     if "history" not in myHistory.keys():
         # update to latest history
         print("No emails since last sync")
@@ -74,6 +86,9 @@ def _get_latest_emails():
         for history in history_list
         for sub_history in history["messagesAdded"]
     ]
+    if not utils.is_local_environment():
+        _set_historyId(new_historyId)
+        _label_messages(message_ids=messagesAdded)
     # For testing purposes, I don't want to ratchet up the historyId
 
     return set(messagesAdded)
@@ -98,24 +113,10 @@ def get_latest_messages():
         message = (
             gmail.users()
             .messages()
-            .get(userId=os.environ["mission_email"], id=message_id, format="raw")
+            .get(userId=os.environ["mission_email"], id=message_id)
             .execute()
         )
-        email_str = base64.urlsafe_b64decode(message["raw"]).decode("utf-8")
-        # policy.default accesses python3 features such as get_body
-        email_obj = email.message_from_string(email_str, policy=email.policy.default)
-        # store id has hashed object to make sure to process emails only once
-        email_obj.id = hashlib.sha1(email_str.encode("utf-8")).hexdigest()
-        email_obj.message_id = message_id
-        # TODO - better validation
-        sender = email_obj["To"].split("@")[0]
-        if sender not in white_list:
-            email_obj.sender = None
-            return ValueError("Sender not in email white list")
-        email_obj.sender = sender
-        return email_obj
+        return message
 
-    documents = db.collection("app_setup").get()
-    white_list = [doc.id for doc in documents]
     email_ids = _get_latest_emails()
     return {email_id: _get_email(email_id) for email_id in email_ids}

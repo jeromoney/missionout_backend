@@ -60,7 +60,12 @@ def _get_latest_emails():
     # allow while loop to execute on the first pass
     nextPageToken = None
     history_list = []
+    i = 0
     while nextPageToken is None or nextPageToken:
+        # limit function to 50 iterations. really it should never be more than 1
+        i += 1
+        if i > 50:
+            raise EOFError
         myHistory = (
             gmail.users()
             .history()

@@ -64,10 +64,12 @@ def main_notification2mission(event: dict, _):
     return email2mission.notification2mission.notification2mission(event, _)
 
 
-def main_documentWrite2mission(event: dict, _):
+def main_documentWrite2mission(event: dict, context):
     import email2mission.documentWrite2mission
 
-    batch, message = email2mission.documentWrite2mission.documentWrite2mission(event)
+    batch, message = email2mission.documentWrite2mission.documentWrite2mission(
+        event, context
+    )
     batch.commit()
     return message
 

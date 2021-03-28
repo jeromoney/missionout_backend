@@ -112,7 +112,9 @@ def _sendgrid_team_parsing_function(document_dict: dict):
     return _get_team_id_from_email(to_address)
 
 
-def documentWrite2mission(event: dict):
+def documentWrite2mission(event: dict, context):
+    print(context)
+    return
     db = firestore.Client()
     batch = db.batch()  # writes will be added to batch object
     # I could theoretically get the data from the event, but I don't want to parse the message

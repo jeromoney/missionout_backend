@@ -152,7 +152,6 @@ def documentWrite2mission(event: dict):
     timeStamp: DatetimeWithNanoseconds = document_data["webhookTimestamp"]
     # theoretically if two identical missions spanned midnight, they would not be identified as duplicates
     id = hashlib.md5((f"{mission_dict}{timeStamp.date()}").encode("utf8")).hexdigest()
-    # TODO Need to add something in case text body is repeated
     mission = Mission(email_dict=mission_dict, id=id, sender=team_Id)
     page = Page(mission=mission, email_sender=email_sender)
     # write data to team folder. Check for idempotency

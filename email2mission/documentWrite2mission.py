@@ -113,12 +113,10 @@ def _sendgrid_team_parsing_function(document_dict: dict):
 
 
 def documentWrite2mission(event: dict, context):
-    print(context)
-    return
     db = firestore.Client()
     batch = db.batch()  # writes will be added to batch object
     # I could theoretically get the data from the event, but I don't want to parse the message
-    path = event["value"]["name"].split('/("default)/')[1]
+    path = context.resource.split("/documents/")[1]
     doc_ref = db.document(path)
     document_data = doc_ref.get().to_dict()
     # I do not need to worry if message already has been processed. It will only generate a

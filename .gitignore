@@ -19,3 +19,4 @@ email2mission_app/.vscode/launch.json
 .coverage
 email2mission_app/.vscode/settings.json
 .env
+email2mission_app/config.yaml

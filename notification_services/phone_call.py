@@ -5,7 +5,7 @@ from data import MyMessage, Team
 from cloud_secrets import get_secret_value
 import cloud_config
 
-twilio_config = cloud_config.twilio_config()
+twilio_config = cloud_config.get_config(module='twilio')
 
 
 def make_phone_call(event: dict, team: Team):

@@ -32,7 +32,7 @@ def dailypubrequest():
 
     request = {
         "labelIds": [email2mission_app.app_utils.get_label_id("NewMission")],
-        "topicName": cloud_config.email_2_mission_config()["topic"],
+        "topicName": cloud_config.get_config(module="email_2_mission")["topic"],
     }
     gmail.users().stop(userId=email_address).execute()
     result = gmail.users().watch(userId=email_address, body=request).execute()

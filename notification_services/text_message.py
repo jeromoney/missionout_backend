@@ -8,7 +8,7 @@ import json
 from utils import TEST_RESOURCE_STR, get_teamID_from_event
 import cloud_config
 
-twilio_config = cloud_config.twilio_config()
+twilio_config = cloud_config.get_config(module="twilio")
 
 
 def send_text_message(event: dict, team: Team):

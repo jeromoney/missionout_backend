@@ -61,7 +61,12 @@ def receiveEmailWebhook(request):
 def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
 
-    return email2mission.notification2mission.notification2mission(event, _)
+    batch, message = email2mission.notification2mission.notification2mission(event, _)
+    if batch is not None:
+        batch.commit()
+        return message
+    else:
+        return "Nothing to write"
 
 
 if __name__ == "__main__":

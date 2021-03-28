@@ -58,6 +58,9 @@ class Page:
 
 
 def _google_parsing_function(request: dict):
+    mimeType = request["payload"]["mimeType"]
+    if mimeType != "text/plain":
+        raise ValueError(f"Only plain text messages are accepted. Found: {mimeType}")
     body_base64 = request["payload"]["body"]["data"]
     return base64.b64decode(body_base64).decode("UTF-8")
 
@@ -113,14 +116,15 @@ def _sendgrid_team_parsing_function(document_dict: dict):
 
 
 def documentWrite2mission(event: dict, context):
-    print(context)
-    print(type(context))
     db = firestore.Client()
     batch = db.batch()  # writes will be added to batch object
     # I could theoretically get the data from the event, but I don't want to parse the message
     path = context.resource.split("/documents/")[1]
     doc_ref = db.document(path)
-    document_data = doc_ref.get().to_dict()
+    document_data_get = doc_ref.get()
+    if not document_data_get.exists:
+        raise FileNotFoundError("Could not find the document that triggered function")
+    document_data = document_data_get.to_dict()
     # I do not need to worry if message already has been processed. It will only generate a
     # mission on the first run through.
     sender = document_data["webhookSource"]
@@ -129,7 +133,12 @@ def documentWrite2mission(event: dict, context):
         "WebhookSender.GOOGLE": _google_parsing_function,
     }
     parsing_function = sender_dict[sender]
-    text_body = parsing_function(document_data)
+
+    try:
+        text_body = parsing_function(document_data)
+    except ValueError as e:
+        batch.update(doc_ref, {"processed": "error", "error_code": str(e)})
+        return batch, f"found error while processing webhook: {e}"
     try:
         mission_dict = parse_email(
             text_body

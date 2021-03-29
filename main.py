@@ -1,5 +1,4 @@
 # Entry way for google cloud functions.
-import json
 from concurrent.futures.thread import ThreadPoolExecutor
 
 import delete_user_data as my_delete_user_data
@@ -70,6 +69,18 @@ def main_notification2mission(event: dict, _):
     import email2mission.notification2mission
 
     return email2mission.notification2mission.notification2mission(event, _)
+
+
+def main_sync_add_phone_number(event: dict, _):
+    import syncphonenumber
+
+    syncphonenumber.addphonenumber(event)
+
+
+def main_sync_delete_phone_number(event: dict, _):
+    import syncphonenumber
+
+    syncphonenumber.deletephonenumber(event)
 
 
 def main_documentWrite2mission(event: dict, context):

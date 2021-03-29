@@ -74,3 +74,7 @@ def main_documentWrite2mission(event: dict, context):
     )
     batch.commit()
     return message
+
+
+if __name__ == "__main__":
+    receiveEmailWebhook(None)

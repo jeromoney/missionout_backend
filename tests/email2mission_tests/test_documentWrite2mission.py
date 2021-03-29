@@ -58,5 +58,13 @@ class DocumentWrite2MissionTestCase(unittest.TestCase):
         self.assertIsInstance(result, WriteBatch)
 
 
+    def test_emojis_break_system(self):
+        context = ContestMock(document_id="DuXMFtG3sZqwvIzRKl8R")
+        result, message = documentWrite2mission({}, context)
+        print(message)
+        self.assertIsInstance(result, WriteBatch)
+        self.assertEqual("success", message)
+
+
 if __name__ == "__main__":
     unittest.main()

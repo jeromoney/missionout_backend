@@ -62,7 +62,8 @@ def _google_parsing_function(request: dict):
     if mimeType != "text/plain":
         raise ValueError(f"Only plain text messages are accepted. Found: {mimeType}")
     body_base64 = request["payload"]["body"]["data"]
-    return base64.b64decode(body_base64).decode("UTF-8")
+    # This was an annoying bug to fix. Emojis broke the system when I was just using b64encode
+    return base64.urlsafe_b64decode(body_base64).decode("UTF-8")
 
 
 def _sendgrid_parsing_function(request: dict):

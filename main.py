@@ -62,6 +62,7 @@ def receiveEmailWebhook(request):
         `make_response <https://flask.palletsprojects.com/en/1.1.x/api/#flask.Flask.make_response>`.
     """
     import email2mission.receiveemailwebhook
+
     return email2mission.receiveemailwebhook.receiveEmailWebhook(request)
 
 
@@ -79,4 +80,3 @@ def main_documentWrite2mission(event: dict, context):
     )
     batch.commit()
     return message
-

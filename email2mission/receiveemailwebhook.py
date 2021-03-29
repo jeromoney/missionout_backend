@@ -1,6 +1,5 @@
 import os
-from flask import abort, request
-from functools import wraps
+from flask import abort
 from werkzeug.security import check_password_hash
 from google.cloud import firestore
 
@@ -17,24 +16,10 @@ def _validate_sendgrid_request(request):
         return False
 
 
-def _validate_request(f):
-    """Validates requests from all incoming sources"""
-
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if _validate_sendgrid_request(request):
-            return f(*args, **kwargs)
-        else:
-            return abort(403)
-
-    return decorated_function
-
-
-@_validate_request
 def receiveEmailWebhook(request):
-    print(request.form)
+    if not _validate_sendgrid_request(request):
+        return abort(403)
     # STORE THE EVENT
-    webhookTimestamp = firestore.SERVER_TIMESTAMP
     item_list = [item for item in request.form.items()]
     item_dict = {item[0]: item[1] for item in item_list}
     item_dict["webhookTimestamp"] = firestore.SERVER_TIMESTAMP

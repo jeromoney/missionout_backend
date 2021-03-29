@@ -6,7 +6,6 @@ from google_auth_oauthlib.flow import Flow
 import sys
 from flask import abort, Flask, request
 from functools import wraps
-from twilio.request_validator import RequestValidator
 from werkzeug.security import generate_password_hash, check_password_hash
 from enum import Enum, unique, auto
 from google.cloud import firestore
@@ -30,24 +29,12 @@ def _validate_sendgrid_request(request):
         return False
 
 
-def _validate_twilio_request(request):
-    validator = RequestValidator(get_secret_value("twilio_auth_token"))
-    return validator.validate(
-        request.url, request.form, request.headers.get("X-TWILIO-SIGNATURE", "")
-    )
-
-
-def _validate_google_request(request):
-    return False
-
-
 def _validate_request(f):
     """Validates requests from all incoming sources"""
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
         valididation_functions = [
-            (_validate_google_request, WebhookSender.GOOGLE),
             (_validate_sendgrid_request, WebhookSender.SENDGRID),
         ]
         # Only one validator should pass. Returns enum if valid else returns None

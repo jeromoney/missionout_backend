@@ -55,6 +55,8 @@ def main_dailypubrequest(_, __):
 def receiveEmailWebhook(request):
     import email2mission.receiveemailwebhook
 
+    print(request)
+    print(type(request))
     return email2mission.receiveemailwebhook.receiveEmailWebhook(request)
 
 

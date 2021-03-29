@@ -53,10 +53,15 @@ def main_dailypubrequest(_, __):
 
 
 def receiveEmailWebhook(request):
+    """Responds to any HTTP request.
+    Args:
+        request (flask.Request): HTTP request object.
+    Returns:
+        The response text or any set of values that can be turned into a
+        Response object using
+        `make_response <https://flask.palletsprojects.com/en/1.1.x/api/#flask.Flask.make_response>`.
+    """
     import email2mission.receiveemailwebhook
-
-    print(request)
-    print(type(request))
     return email2mission.receiveemailwebhook.receiveEmailWebhook(request)
 
 
@@ -75,6 +80,3 @@ def main_documentWrite2mission(event: dict, context):
     batch.commit()
     return message
 
-
-if __name__ == "__main__":
-    receiveEmailWebhook(None)

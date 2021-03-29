@@ -52,10 +52,10 @@ def main_dailypubrequest(_, __):
     print(email2mission.dailypubrequest.dailypubrequest())
 
 
-def receiveEmailWebhook(request):
+def receiveEmailWebhook():
     import email2mission.receiveemailwebhook
 
-    return email2mission.receiveemailwebhook.receiveEmailWebhook(request)
+    return email2mission.receiveemailwebhook.receiveEmailWebhook()
 
 
 def main_notification2mission(event: dict, _):
@@ -72,9 +72,3 @@ def main_documentWrite2mission(event: dict, context):
     )
     batch.commit()
     return message
-
-
-if __name__ == "__main__":
-    # test_event = json.loads(utils.TEST_RESOURCE_STR)
-    # send_page(test_event, None)
-    print(receiveEmailWebhook("fdfd"))

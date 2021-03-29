@@ -111,7 +111,7 @@ def _google_team_parsing_function(document_dict: dict):
 
 
 def _sendgrid_team_parsing_function(document_dict: dict):
-    to_address = document_dict["to"]
+    to_address = document_dict["to"].split(",")[0].strip()
     return _get_team_id_from_email(to_address)
 
 

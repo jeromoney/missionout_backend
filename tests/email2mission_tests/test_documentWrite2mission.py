@@ -52,6 +52,11 @@ class DocumentWrite2MissionTestCase(unittest.TestCase):
         with pytest.raises(FileNotFoundError):
             documentWrite2mission({}, context)
 
+    def test_sendgrid_with_multiple_senders(self):
+        context = ContestMock(document_id="omaBb6YAdSAou8F5PSvJ")
+        result, message = documentWrite2mission({}, context)
+        self.assertIsInstance(result, WriteBatch)
+
 
 if __name__ == "__main__":
     unittest.main()

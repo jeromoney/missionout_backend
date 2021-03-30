@@ -14,3 +14,4 @@ firestore_document_paths:
   mission_path : 'teams/{team_Id}/missions'
   page_path : '{mission_path}/{mission_id}/pages'
   team_path : teams
+  users : users

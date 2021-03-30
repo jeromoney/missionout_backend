@@ -14,7 +14,7 @@ secret_keys = [
 def get_secret_value(key):
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = cloud_config.get_config(module='secrets')
+    secrets_config = cloud_config.get_config(module="secrets")
     parent = client.secret_version_path(secrets_config.get("project_id"), key, "latest")
     response = client.access_secret_version(name=parent)
     response = response.payload.data.decode("UTF-8")
@@ -29,7 +29,7 @@ def get_secret_value(key):
 def set_secret_value(key, value):
     assert key in secret_keys
     client = secretmanager.SecretManagerServiceClient()
-    secrets_config = cloud_config.get_config(module='secrets')
+    secrets_config = cloud_config.get_config(module="secrets")
     parent = client.secret_path(secrets_config.get("project_id"), key)
     if isinstance(value, dict):
         value = str(value)
@@ -38,8 +38,3 @@ def set_secret_value(key, value):
         request={"parent": parent, "payload": {"data": payload}}
     )
     print("Added secret version: {}".format(response.name))
-
-
-if __name__ == "__main__":
-    for some_key in secret_keys:
-        print(get_secret_value(some_key))

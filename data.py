@@ -1,7 +1,10 @@
 from google.cloud import firestore
 from itertools import chain
-
 from google.cloud.exceptions import NotFound
+
+from cloud_config import get_config
+
+firestore_paths = get_config("firestore_document_paths")
 
 
 class MyMessage:
@@ -39,6 +42,7 @@ class User:
         )
         self.iOSCriticalAlertsVolume = snapshot_dict.get("iOSCriticalAlertsVolume", 1.0)
         self.iOSSound = snapshot_dict.get("iOSSound", None)
+        self.phoneNumbers = snapshot_dict.get("phoneNumbers", [])
 
 
 class Team:
@@ -48,21 +52,13 @@ class Team:
         self.users = []
         self.db = firestore.Client()
         self.__init_users()
-        # access all numbers in /teams/{teamID}/phoneNumbers/{phoneNumbers}
-        self.mobile_numbers = []
-        self.voice_phone_numbers = []
-        docs = self.db.collection(f"teams/{teamID}/phoneNumbers").stream()
-        for doc in docs:
-            phone_number = doc.get("phoneNumber")
-            if phone_number is None:
-                continue
-            if doc.get("allowCalls"):
-                self.voice_phone_numbers.append(phone_number)
-            if doc.get("allowText"):
-                self.mobile_numbers.append(phone_number)
 
     def __init_users(self):
-        docs = self.db.collection("users").where("teamID", "==", self.teamID).get()
+        docs = (
+            self.db.collection(firestore_paths["users"])
+            .where("teamID", "==", self.teamID)
+            .get()
+        )
         for doc in docs:
             user = User(doc.to_dict())
             if self.editorsOnly and user.isEditor:
@@ -85,10 +81,24 @@ class Team:
         self.users.append(user)
 
     def get_voice_phone_numbers(self):
-        return self.voice_phone_numbers
+        result = []
+        for user in self.users:
+            result += [
+                phoneNumber["phoneNumber"]
+                for phoneNumber in user.phoneNumbers
+                if phoneNumber["allowCalls"]
+            ]
+        return result
 
     def get_mobile_phone_numbers(self):
-        return self.mobile_numbers
+        result = []
+        for user in self.users:
+            result += [
+                phoneNumber["phoneNumber"]
+                for phoneNumber in user.phoneNumbers
+                if phoneNumber["allowText"]
+            ]
+        return result
 
     def get_uids(self):
         return [user.uid for user in self.users if user.uid is not None]
@@ -99,7 +109,9 @@ class Team:
             for user in self.users:
                 if user.tokens is not None and token in user.tokens:
                     # delete token
-                    doc = self.db.collection("users").document(user.uid)
+                    doc = self.db.collection(firestore_paths["users"]).document(
+                        user.uid
+                    )
                     try:
                         doc.update({"tokens": firestore.firestore.ArrayRemove([token])})
                     except NotFound:

@@ -77,7 +77,7 @@ typed-ast==1.4.2
 typing-extensions==3.7.4.3
 typing-inspect==0.6.0
 uritemplate==3.0.1
-urllib3==1.26.3
+urllib3==1.26.4
 virtualenv==20.4.2
 virtualenv-clone==0.5.4
 virtualenvwrapper==4.8.4

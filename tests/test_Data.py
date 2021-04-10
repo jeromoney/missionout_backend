@@ -28,8 +28,8 @@ class DataTestCase(unittest.TestCase):
         team = Team("chaffeecountysarnorth.org", editors_only=False)
         team.add_user(user1)
         team.add_user(user2)
-        self.assert_(user1 in team.users)
-        self.assert_(user2 in team.users)
+        self.assertTrue(user1 in team.users)
+        self.assertTrue(user2 in team.users)
 
     def test_phone_numbers(self):
         team = Team(editors_only=True, teamID="demoteam.com")

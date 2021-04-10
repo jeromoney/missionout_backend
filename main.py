@@ -1,7 +1,6 @@
 # Entry way for google cloud functions.
 from concurrent.futures.thread import ThreadPoolExecutor
 
-import delete_user_data as my_delete_user_data
 import user_setup as my_user_setup
 import utils
 from data import Team, MyMessage
@@ -39,10 +38,6 @@ def send_page(event: dict, _):
 
 def user_setup(event: dict, _):
     my_user_setup.user_setup(event)
-
-
-def delete_user_data(event: dict, _):
-    my_delete_user_data.delete_user_data(event)
 
 
 def main_dailypubrequest(_, __):

@@ -4,17 +4,10 @@
 
     Trigger: Document Write at /webhook
     """
-
-import sys
-
-sys.path.append("/Users/justin/Projects/missionout_backend")
 from google.cloud import firestore
-import base64
 import hashlib
-from google.api_core.exceptions import AlreadyExists
 
 from cloud_config import get_config
-from email2mission.cadpage2dict import parse_email
 
 
 class Mission:
@@ -55,65 +48,6 @@ class Page:
         return get_config(module="firestore_document_paths")["page_path"].format(
             mission_path=self.missionDocumentPath, mission_id=self.ID
         )
-
-
-def _google_parsing_function(request: dict):
-    mimeType = request["payload"]["mimeType"]
-    if mimeType != "text/plain":
-        raise ValueError(f"Only plain text messages are accepted. Found: {mimeType}")
-    body_base64 = request["payload"]["body"]["data"]
-    # This was an annoying bug to fix. Emojis broke the system when I was just using b64encode
-    return base64.urlsafe_b64decode(body_base64).decode("UTF-8")
-
-
-def _sendgrid_parsing_function(request: dict):
-    return request["text"]
-
-
-def _google_sender_parsing_function(document_dict: dict):
-    headers = document_dict["payload"]["headers"]
-    for header in headers:
-        if header["name"] == "From":
-            return header["value"]
-    raise ValueError("Could not find sender of email")
-
-
-def _sendgrid_sender_parsing_function(document_dict: dict):
-    return document_dict["from"]
-
-
-def _get_team_id_from_email(to_address: str):
-    """looks up email address and returns the team that it belongs to"""
-    db = firestore.Client()
-    docs = [
-        doc
-        for doc in db.collection(get_config("firestore_document_paths")["team_path"])
-        .where("missionEmail", "array_contains", to_address)
-        .stream()
-    ]
-    if len(docs) == 0:
-        raise ValueError("Could not identify team from message")
-    elif len(docs) > 1:
-        raise ValueError("More than one team had the same email address")
-    else:
-        return docs[0].to_dict()["teamID"]
-
-
-def _google_team_parsing_function(document_dict: dict):
-    headers = document_dict["payload"]["headers"]
-    for header in headers:
-        if header["name"] in ("To", "Cc"):
-            to_address = header["value"]
-            if "," in to_address:
-                to_address = to_address.split(",")[0].strip()
-            return _get_team_id_from_email(to_address)
-
-    raise ValueError("Could not find TO/CC header in email")
-
-
-def _sendgrid_team_parsing_function(document_dict: dict):
-    to_address = document_dict["to"].split(",")[0].strip()
-    return _get_team_id_from_email(to_address)
 
 
 def documentWrite2mission(event: dict, context):

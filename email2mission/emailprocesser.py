@@ -1,3 +1,5 @@
+    """Stores email messages formatted as a dictionary into firestore for further processing.
+    """
 from google.cloud import firestore
 
 

@@ -64,6 +64,8 @@ If no external file is found, the backend falls back to `.env` in the backend fo
 
 This repo includes a Render blueprint at [render.yaml](/Users/justi/OneDrive/Documents/Projects/backend/render.yaml).
 
+The blueprint installs dependencies from `uv.lock` with a frozen sync so deploys stay pinned to the audited lockfile.
+
 After creating the `missionout-backend` service and `missionout-db` database in Render, set:
 
 ```text
